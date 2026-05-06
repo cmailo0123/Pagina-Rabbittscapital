@@ -3,164 +3,250 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rabbittscapital</title>
+<title id="site-title">Rabbittscapital</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#0f2340;--navy2:#1a3a5c;--gold:#b8964e;--gold2:#d4af6a;--white:#fff;--off:#f7f5f0;--light:#eef2f7;--text:#1a2332;--muted:#5a6a7e;--border:#d4dce8}
-body{font-family:'Inter',sans-serif;color:var(--text);background:var(--white)}
+:root{
+  --navy:#0f2340;--navy2:#1a3a5c;--gold:#b8964e;--gold2:#d4af6a;
+  --white:#fff;--off:#f7f5f0;--light:#eef2f7;
+  --text:#1a2332;--muted:#5a6a7e;--border:#d4dce8;
+  --anim-dur:0.6s;--anim-ease:cubic-bezier(0.22,1,0.36,1);
+}
 html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:var(--text);background:var(--white);overflow-x:hidden}
 a{text-decoration:none;color:inherit}
 
-nav{background:var(--navy);position:sticky;top:0;z-index:999;box-shadow:0 2px 24px rgba(15,35,64,0.35)}
-.nav-inner{max-width:1280px;margin:0 auto;padding:0 40px;height:72px;display:flex;align-items:center;justify-content:space-between}
-.nav-logo{font-family:'Playfair Display',serif;font-size:17px;letter-spacing:3px;color:var(--gold);cursor:pointer;line-height:1.2}
+/* ===== ANIMATION SYSTEM ===== */
+.page-enter-fade{animation:pgFade var(--anim-dur) var(--anim-ease) both}
+.page-enter-slide-up{animation:pgUp var(--anim-dur) var(--anim-ease) both}
+.page-enter-slide-right{animation:pgRight var(--anim-dur) var(--anim-ease) both}
+.page-enter-zoom{animation:pgZoom var(--anim-dur) var(--anim-ease) both}
+.page-enter-none{animation:none;opacity:1}
+
+@keyframes pgFade{from{opacity:0}to{opacity:1}}
+@keyframes pgUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pgRight{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pgZoom{from{opacity:0;transform:scale(0.97)}to{opacity:1;transform:scale(1)}}
+
+/* Scroll reveal classes */
+.rv{opacity:0;transform:translateY(24px);transition:opacity var(--anim-dur) var(--anim-ease),transform var(--anim-dur) var(--anim-ease)}
+.rv.visible{opacity:1;transform:none}
+.rv-l{opacity:0;transform:translateX(-24px);transition:opacity var(--anim-dur) var(--anim-ease),transform var(--anim-dur) var(--anim-ease)}
+.rv-l.visible{opacity:1;transform:none}
+.rv-r{opacity:0;transform:translateX(24px);transition:opacity var(--anim-dur) var(--anim-ease),transform var(--anim-dur) var(--anim-ease)}
+.rv-r.visible{opacity:1;transform:none}
+.rv-s{opacity:0;transform:scale(0.95);transition:opacity var(--anim-dur) var(--anim-ease),transform var(--anim-dur) var(--anim-ease)}
+.rv-s.visible{opacity:1;transform:none}
+.no-anim .rv,.no-anim .rv-l,.no-anim .rv-r,.no-anim .rv-s{opacity:1;transform:none}
+
+/* Delay helpers */
+.d1{transition-delay:0.05s}.d2{transition-delay:0.12s}.d3{transition-delay:0.2s}
+.d4{transition-delay:0.28s}.d5{transition-delay:0.36s}.d6{transition-delay:0.44s}
+.d7{transition-delay:0.52s}.d8{transition-delay:0.6s}
+
+/* Hero stagger (CSS-only) */
+.hs1{animation-delay:0.05s}.hs2{animation-delay:0.15s}.hs3{animation-delay:0.25s}
+.hs4{animation-delay:0.35s}.hs5{animation-delay:0.45s}.hs6{animation-delay:0.55s}
+
+/* ===== PAGES ===== */
+.page{display:none;min-height:calc(100vh - 72px)}
+.page.active{display:block}
+
+/* ===== NAV MODES ===== */
+nav.site-nav{transition:all 0.3s}
+body.nav-top nav.site-nav{background:var(--navy);position:sticky;top:0;left:0;right:0;z-index:999;box-shadow:0 2px 24px rgba(15,35,64,0.3);width:100%;height:72px}
+body.nav-top .nav-inner{max-width:1280px;margin:0 auto;padding:0 40px;height:72px;display:flex;align-items:center;justify-content:space-between}
+body.nav-side nav.site-nav{position:fixed;left:0;top:0;bottom:0;width:220px;background:var(--navy);z-index:999;display:flex;flex-direction:column;box-shadow:4px 0 24px rgba(15,35,64,0.2)}
+body.nav-side .nav-inner{flex-direction:column;align-items:flex-start;justify-content:flex-start;padding:28px 20px;height:100%;display:flex;gap:0}
+body.nav-side .nav-logo{margin-bottom:36px}
+body.nav-side .nav-links{flex-direction:column;align-items:flex-start;gap:4px;width:100%}
+body.nav-side .nav-links li button{width:100%;text-align:left;padding:10px 14px}
+body.nav-side #app-wrap{margin-left:220px}
+body.nav-side .page{min-height:100vh}
+body.nav-side .hamburger{display:none!important}
+body.nav-float nav.site-nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:rgba(15,35,64,0.93);backdrop-filter:blur(14px);border-radius:50px;border:1px solid rgba(255,255,255,0.1);z-index:999;height:54px;width:auto;max-width:760px;box-shadow:0 8px 32px rgba(15,35,64,0.35)}
+body.nav-float .nav-inner{padding:0 20px;height:54px;display:flex;align-items:center;justify-content:center;gap:4px}
+body.nav-float .nav-logo{margin-right:24px}
+body.nav-float #app-wrap{padding-top:86px}
+body.nav-float .hamburger{display:none!important}
+
+.nav-logo{font-family:'Playfair Display',serif;font-size:17px;letter-spacing:3px;color:var(--gold);cursor:pointer;line-height:1.2;flex-shrink:0}
 .nav-logo small{display:block;font-size:9px;letter-spacing:5px;color:rgba(255,255,255,0.3);font-family:'Inter',sans-serif;font-weight:300;margin-top:3px}
-.nav-links{display:flex;gap:2px;list-style:none}
-.nav-links li button{background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.65);font-size:13px;padding:8px 16px;border-radius:6px;transition:all 0.2s;font-family:'Inter',sans-serif;letter-spacing:0.3px}
-.nav-links li button:hover{color:#fff;background:rgba(255,255,255,0.07)}
+.nav-links{display:flex;gap:2px;list-style:none;align-items:center}
+.nav-links li button{background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.65);font-size:13px;padding:8px 14px;border-radius:6px;transition:all 0.2s;font-family:'Inter',sans-serif}
+.nav-links li button:hover{color:#fff;background:rgba(255,255,255,0.08)}
 .nav-links li button.active{color:var(--gold)}
-.nav-cta{background:var(--gold)!important;color:var(--navy)!important;font-weight:500!important;border-radius:8px!important}
+.nav-cta-btn{background:var(--gold)!important;color:var(--navy)!important;font-weight:500!important;border-radius:8px!important}
 .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
 .hamburger span{width:22px;height:1.5px;background:rgba(255,255,255,0.6);border-radius:2px;display:block}
 #mob-menu{display:none;background:var(--navy2);padding:12px 24px 20px;border-top:1px solid rgba(255,255,255,0.06)}
 #mob-menu.open{display:block}
 #mob-menu button{display:block;width:100%;text-align:left;background:none;border:none;color:rgba(255,255,255,0.75);padding:12px 0;font-size:14px;font-family:'Inter',sans-serif;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.05)}
 
-.page{display:none;min-height:calc(100vh - 72px)}
-.page.active{display:block}
-
-/* ===== INICIO ===== */
-.hero{background:var(--navy);min-height:88vh;display:flex;align-items:center;padding:80px 40px}
-.hero-wrap{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:80px;align-items:center;width:100%}
+/* ===== HERO ===== */
+.hero{min-height:88vh;display:flex;align-items:center;padding:80px 40px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(184,150,78,0.08) 0%,transparent 65%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(184,150,78,0.4),transparent)}
+.hero-wrap{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:80px;align-items:center;width:100%;position:relative}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:24px}
 .hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--gold)}
-.hero h1{font-family:'Playfair Display',serif;font-size:clamp(40px,5vw,64px);font-weight:300;line-height:1.1;color:#fff;margin-bottom:22px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(38px,5vw,64px);font-weight:300;line-height:1.1;color:#fff;margin-bottom:22px}
 .hero h1 em{font-style:italic;color:var(--gold)}
 .hero-p{font-size:16px;line-height:1.85;color:rgba(255,255,255,0.55);margin-bottom:36px;max-width:500px}
 .hero-btns{display:flex;gap:12px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.22s;border:none;font-family:'Inter',sans-serif}
 .btn-gold{background:var(--gold);color:var(--navy)}
-.btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 20px rgba(184,150,78,0.3)}
 .btn-outline{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.22)}
 .btn-outline:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.4)}
 .btn-navy{background:var(--navy);color:#fff}
-.btn-navy:hover{background:var(--navy2)}
+.btn-navy:hover{background:var(--navy2);transform:translateY(-1px)}
 .hero-right{display:flex;flex-direction:column;gap:14px}
-.h-metric{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:12px;padding:22px 26px;transition:border-color 0.2s}
-.h-metric:hover{border-color:rgba(184,150,78,0.3)}
+.h-metric{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:12px;padding:22px 26px;transition:all 0.3s}
+.h-metric:hover{border-color:rgba(184,150,78,0.35);background:rgba(255,255,255,0.06);transform:translateY(-2px)}
 .h-metric-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
 .h-metric-val{font-family:'Playfair Display',serif;font-size:30px;font-weight:300;color:#fff}
 .h-metric-sub{font-size:11px;color:rgba(255,255,255,0.3);margin-top:3px}
 .countries{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.ctag{background:rgba(184,150,78,0.07);border:1px solid rgba(184,150,78,0.18);border-radius:8px;padding:9px 13px;font-size:13px;color:rgba(255,255,255,0.78);display:flex;align-items:center;gap:8px}
+.ctag{background:rgba(184,150,78,0.07);border:1px solid rgba(184,150,78,0.18);border-radius:8px;padding:9px 13px;font-size:13px;color:rgba(255,255,255,0.78);display:flex;align-items:center;gap:8px;transition:all 0.2s}
+.ctag:hover{background:rgba(184,150,78,0.14);border-color:rgba(184,150,78,0.35)}
 
 /* INFO SECTION */
-.section-info{background:var(--off);padding:80px 40px}
+.section-info{padding:88px 40px}
 .s-inner{max-width:1280px;margin:0 auto}
 .eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px}
 .eyebrow::before{content:'';width:24px;height:1px;background:var(--gold)}
 .s-title{font-family:'Playfair Display',serif;font-size:clamp(26px,3.5vw,40px);font-weight:300;color:var(--navy);line-height:1.2;margin-bottom:48px}
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
 .info-desc{font-size:16px;line-height:1.9;color:var(--muted);margin-bottom:28px}
-.tips-list{display:flex;flex-direction:column;gap:14px}
-.tip-row{display:flex;gap:18px;align-items:flex-start;padding:18px 20px;background:#fff;border-radius:10px;border:1px solid var(--border)}
-.tip-n{width:34px;height:34px;border-radius:8px;background:var(--light);color:var(--navy);font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Playfair Display',serif}
+.tips-list{display:flex;flex-direction:column;gap:12px}
+.tip-row{display:flex;gap:18px;align-items:flex-start;padding:18px 20px;background:#fff;border-radius:10px;border:1px solid var(--border);transition:all 0.25s}
+.tip-row:hover{border-color:var(--navy);transform:translateX(4px)}
+.tip-n{width:34px;height:34px;border-radius:8px;background:var(--light);color:var(--navy);font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Playfair Display',serif;transition:all 0.25s}
+.tip-row:hover .tip-n{background:var(--navy);color:#fff}
 .tip-c h4{font-size:14px;font-weight:500;color:var(--navy);margin-bottom:3px}
 .tip-c p{font-size:13px;color:var(--muted);line-height:1.5}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.stat-card{background:var(--navy);border-radius:12px;padding:28px 22px;text-align:center}
+.stat-card{background:var(--navy);border-radius:12px;padding:28px 22px;text-align:center;transition:all 0.3s;cursor:default}
+.stat-card:hover{background:var(--navy2);transform:translateY(-3px);box-shadow:0 12px 32px rgba(15,35,64,0.2)}
 .stat-n{font-family:'Playfair Display',serif;font-size:36px;font-weight:300;color:var(--gold)}
 .stat-l{font-size:11px;color:rgba(255,255,255,0.45);margin-top:6px;letter-spacing:0.5px}
 
-/* ===== PROPIEDADES ===== */
+/* PROPS */
 #page-propiedades{background:var(--off)}
-.page-banner{background:var(--navy);padding:60px 40px;text-align:center}
-.page-banner h1{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,46px);font-weight:300;color:#fff;margin-top:12px}
-.props-wrap{max-width:1280px;margin:0 auto;padding:40px 40px}
+.page-banner{padding:60px 40px;text-align:center;position:relative;overflow:hidden}
+.page-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(184,150,78,0.08),transparent 70%)}
+.page-banner h1{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,46px);font-weight:300;color:#fff;margin-top:12px;position:relative}
+.props-wrap{max-width:1280px;margin:0 auto;padding:40px}
 .filter-row{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-bottom:36px}
-.ftab{padding:7px 18px;border-radius:20px;border:1px solid var(--border);font-size:12px;cursor:pointer;background:#fff;color:var(--muted);transition:all 0.2s;font-family:'Inter',sans-serif}
-.ftab:hover,.ftab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.ftab{padding:7px 18px;border-radius:20px;border:1px solid var(--border);font-size:12px;cursor:pointer;background:#fff;color:var(--muted);transition:all 0.22s;font-family:'Inter',sans-serif}
+.ftab:hover{border-color:var(--navy);color:var(--navy)}
+.ftab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
 .props-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:26px}
-.prop-card{background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:all 0.28s}
-.prop-card:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(15,35,64,0.1);border-color:var(--navy)}
-.prop-img{height:210px;overflow:hidden;position:relative;background:var(--light)}
-.prop-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s}
-.prop-card:hover .prop-img img{transform:scale(1.05)}
+.prop-card{background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:all 0.3s}
+.prop-card:hover{transform:translateY(-6px);box-shadow:0 24px 56px rgba(15,35,64,0.12);border-color:var(--navy)}
+
+/* IMAGE SLIDER */
+.prop-slider{position:relative;height:210px;overflow:hidden;background:var(--light)}
+.prop-slider-imgs{display:flex;height:100%;transition:transform 0.5s cubic-bezier(0.22,1,0.36,1)}
+.prop-slider-img{min-width:100%;height:100%;object-fit:cover;flex-shrink:0}
 .prop-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:48px;background:linear-gradient(135deg,var(--light),var(--border))}
-.p-badge{position:absolute;top:12px;left:12px;font-size:10px;font-weight:500;padding:4px 11px;border-radius:20px;letter-spacing:0.5px}
+.slider-prev,.slider-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.45);color:#fff;border:none;cursor:pointer;width:30px;height:30px;border-radius:50%;font-size:14px;display:none;align-items:center;justify-content:center;transition:background 0.2s;z-index:2}
+.prop-slider:hover .slider-prev,.prop-slider:hover .slider-next{display:flex}
+.slider-prev:hover,.slider-next:hover{background:rgba(0,0,0,0.7)}
+.slider-prev{left:10px}.slider-next{right:10px}
+.slider-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+.slider-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.2s;border:none}
+.slider-dot.active{background:#fff;width:16px;border-radius:3px}
+
+.p-badge{position:absolute;top:12px;left:12px;font-size:10px;font-weight:500;padding:4px 11px;border-radius:20px;letter-spacing:0.5px;z-index:1}
 .p-badge-navy{background:var(--navy);color:#fff}
 .p-badge-gold{background:var(--gold);color:var(--navy)}
-.p-country{position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.94);color:var(--navy);font-size:11px;padding:4px 10px;border-radius:20px;font-weight:500}
+.p-country{position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.94);color:var(--navy);font-size:11px;padding:4px 10px;border-radius:20px;font-weight:500;z-index:1}
 .prop-body{padding:22px}
 .prop-type{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
 .prop-titulo{font-family:'Playfair Display',serif;font-size:19px;font-weight:400;color:var(--navy);margin-bottom:8px;line-height:1.3}
 .prop-desc-short{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px}
 .prop-footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:14px;border-top:1px solid var(--border)}
-.prop-precio-lbl,.prop-m2-lbl{font-size:10px;color:var(--muted);letter-spacing:0.3px;margin-bottom:2px}
+.prop-precio-lbl,.prop-m2-lbl{font-size:10px;color:var(--muted);margin-bottom:2px}
 .prop-precio-val{font-family:'Playfair Display',serif;font-size:19px;color:var(--navy)}
 .prop-m2-val{font-size:15px;color:var(--navy);font-weight:500}
-.prop-cta-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;padding:10px;background:var(--light);border-radius:8px;font-size:13px;color:var(--navy);font-weight:500;width:100%;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s}
+.prop-cta-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;padding:10px;background:var(--light);border-radius:8px;font-size:13px;color:var(--navy);font-weight:500;width:100%;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.22s}
 .prop-cta-btn:hover{background:var(--navy);color:#fff}
 
-/* ===== DETALLE ===== */
-#page-detalle{background:var(--off);padding:40px 40px}
+/* DETALLE */
+#page-detalle{padding:40px}
 .det-inner{max-width:1280px;margin:0 auto}
-.det-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;margin-bottom:28px;transition:color 0.2s;background:none;border:none;font-family:'Inter',sans-serif}
-.det-back:hover{color:var(--navy)}
+.det-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;margin-bottom:28px;transition:all 0.2s;background:none;border:none;font-family:'Inter',sans-serif;padding:8px 14px;border-radius:8px}
+.det-back:hover{color:var(--navy);background:var(--light)}
 .det-grid{display:grid;grid-template-columns:1fr 380px;gap:48px;align-items:start}
+
+/* Detalle gallery (big) */
 .det-gallery{border-radius:14px;overflow:hidden;border:1px solid var(--border)}
-.gal-main{width:100%;height:440px;object-fit:cover;display:block;background:var(--light)}
-.gal-ph{width:100%;height:440px;display:flex;align-items:center;justify-content:center;font-size:80px;background:linear-gradient(135deg,var(--light),var(--border))}
-.gal-thumbs{display:flex;gap:8px;padding:12px;background:#fff;border-top:1px solid var(--border);flex-wrap:wrap}
-.gal-thumb{width:68px;height:54px;object-fit:cover;border-radius:6px;cursor:pointer;opacity:0.55;transition:all 0.2s;border:2px solid transparent}
-.gal-thumb:hover,.gal-thumb.active{opacity:1;border-color:var(--navy)}
-.det-info{position:sticky;top:90px}
+.det-slider{position:relative;height:440px;overflow:hidden;background:var(--light)}
+.det-slider-imgs{display:flex;height:100%;transition:transform 0.5s cubic-bezier(0.22,1,0.36,1)}
+.det-slider-img{min-width:100%;height:100%;object-fit:cover;flex-shrink:0}
+.det-ph{width:100%;height:440px;display:flex;align-items:center;justify-content:center;font-size:80px;background:linear-gradient(135deg,var(--light),var(--border))}
+.det-slider-prev,.det-slider-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.45);color:#fff;border:none;cursor:pointer;width:40px;height:40px;border-radius:50%;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;z-index:2}
+.det-slider-prev:hover,.det-slider-next:hover{background:rgba(0,0,0,0.7)}
+.det-slider-prev{left:14px}.det-slider-next{right:14px}
+.det-thumbs{display:flex;gap:8px;padding:12px;background:#fff;border-top:1px solid var(--border);flex-wrap:wrap}
+.det-thumb{width:68px;height:54px;object-fit:cover;border-radius:6px;cursor:pointer;opacity:0.5;transition:all 0.22s;border:2px solid transparent}
+.det-thumb:hover,.det-thumb.active{opacity:1;border-color:var(--navy)}
+
+.det-info{position:sticky;top:24px}
 .det-badge{display:inline-block;font-size:10px;padding:4px 12px;border-radius:20px;margin-bottom:12px;letter-spacing:0.5px}
 .det-type{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
 .det-titulo{font-family:'Playfair Display',serif;font-size:30px;font-weight:300;color:var(--navy);line-height:1.2;margin-bottom:8px}
 .det-loc{font-size:13px;color:var(--muted);margin-bottom:22px}
 .det-price-box{background:var(--navy);border-radius:12px;padding:22px;margin-bottom:18px}
-.det-price-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:6px}
+.det-price-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:6px}
 .det-price-val{font-family:'Playfair Display',serif;font-size:34px;font-weight:300;color:var(--gold)}
-.det-price-cur{font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px}
+.det-price-cur{font-size:12px;color:rgba(255,255,255,0.3);margin-top:4px}
 .det-specs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
-.spec-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.spec-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;transition:border-color 0.2s}
+.spec-box:hover{border-color:var(--navy)}
 .spec-lbl{font-size:10px;color:var(--muted);margin-bottom:3px}
 .spec-val{font-family:'Playfair Display',serif;font-size:20px;color:var(--navy)}
 .det-desc{font-size:14px;line-height:1.85;color:var(--muted);margin-bottom:20px}
 .det-feats h4{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--navy);margin-bottom:10px}
-.feat-tag{display:inline-block;background:var(--light);border:1px solid var(--border);border-radius:6px;padding:4px 11px;font-size:12px;color:var(--navy);margin:0 5px 5px 0}
+.feat-tag{display:inline-block;background:var(--light);border:1px solid var(--border);border-radius:6px;padding:4px 11px;font-size:12px;color:var(--navy);margin:0 5px 5px 0;transition:all 0.2s}
+.feat-tag:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
 .det-btns{display:flex;flex-direction:column;gap:9px;margin-top:20px}
 
-/* ===== NOSOTROS ===== */
+/* NOSOTROS */
 #page-nosotros{background:var(--white)}
-.nos-banner{background:var(--navy);padding:80px 40px;text-align:center}
-.nos-banner h1{font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,52px);font-weight:300;color:#fff;margin-top:12px}
-.nos-banner p{font-size:15px;color:rgba(255,255,255,0.55);max-width:560px;margin:14px auto 0;line-height:1.8}
+.nos-banner{padding:80px 40px;text-align:center;position:relative;overflow:hidden}
+.nos-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(184,150,78,0.07),transparent 65%)}
+.nos-banner h1{font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,52px);font-weight:300;color:#fff;margin-top:12px;position:relative}
+.nos-banner p{font-size:15px;color:rgba(255,255,255,0.55);max-width:560px;margin:14px auto 0;line-height:1.8;position:relative}
 .nos-body{max-width:1280px;margin:0 auto;padding:80px 40px}
 .nos-main{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-bottom:72px}
 .nos-text h2{font-family:'Playfair Display',serif;font-size:30px;font-weight:300;color:var(--navy);margin-bottom:20px}
 .nos-text p{font-size:15px;line-height:1.9;color:var(--muted);margin-bottom:14px}
 .vals-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.val-card{background:var(--navy);border-radius:12px;padding:26px 22px}
+.val-card{background:var(--navy);border-radius:12px;padding:26px 22px;transition:all 0.3s}
+.val-card:hover{background:var(--navy2);transform:translateY(-3px)}
 .val-card h3{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;color:var(--gold);margin-bottom:8px}
 .val-card p{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.65}
-.nos-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;background:var(--off);border-radius:16px;padding:48px;text-align:center}
+.nos-stats-row{display:grid;gap:24px;background:var(--off);border-radius:16px;padding:48px;text-align:center}
 .ns-n{font-family:'Playfair Display',serif;font-size:48px;font-weight:300;color:var(--navy)}
 .ns-t{font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:0.5px}
 
-/* ===== CONTACTO ===== */
+/* CONTACTO */
 #page-contacto{background:var(--off)}
-.cont-banner{background:var(--navy);padding:80px 40px;text-align:center}
-.cont-banner h1{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,46px);font-weight:300;color:#fff;margin-top:12px}
-.cont-banner p{font-size:15px;color:rgba(255,255,255,0.55);max-width:500px;margin:12px auto 0}
+.cont-banner{padding:80px 40px;text-align:center;position:relative;overflow:hidden}
+.cont-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(184,150,78,0.07),transparent 65%)}
+.cont-banner h1{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,46px);font-weight:300;color:#fff;margin-top:12px;position:relative}
+.cont-banner p{font-size:15px;color:rgba(255,255,255,0.55);max-width:500px;margin:12px auto 0;position:relative}
 .cont-body{max-width:1100px;margin:0 auto;padding:64px 40px}
-.cont-main{display:grid;grid-template-columns:340px 1fr;gap:56px;align-items:start}
+.cont-main{display:grid;grid-template-columns:320px 1fr;gap:56px;align-items:start}
 .cont-info-card{background:#fff;border-radius:14px;padding:32px;border:1px solid var(--border)}
 .cont-info-card h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:400;color:var(--navy);margin-bottom:24px}
 .ci-item{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
-.ci-icon{width:42px;height:42px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ci-icon{width:42px;height:42px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;transition:all 0.25s}
+.ci-item:hover .ci-icon{background:var(--gold)}
 .ci-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
 .ci-val{font-size:14px;color:var(--navy);font-weight:500}
 .cont-form-card{background:#fff;border-radius:14px;padding:36px;border:1px solid var(--border)}
@@ -168,272 +254,441 @@ nav{background:var(--navy);position:sticky;top:0;z-index:999;box-shadow:0 2px 24
 .f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .f-field{margin-bottom:14px}
 .f-field label{display:block;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
-.f-field input,.f-field textarea,.f-field select{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);outline:none;transition:border 0.2s;background:#fff}
-.f-field input:focus,.f-field textarea:focus{border-color:var(--navy)}
+.f-field input,.f-field textarea,.f-field select{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);outline:none;transition:all 0.22s;background:#fff}
+.f-field input:focus,.f-field textarea:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(15,35,64,0.06)}
 .f-field textarea{min-height:100px;resize:vertical;line-height:1.6}
 .f-field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a6a7e'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;appearance:none}
 
-footer{background:var(--navy);padding:52px 40px 32px}
+/* ===== FOOTER DINÁMICO ===== */
+footer{position:relative;overflow:hidden}
+footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(184,150,78,0.4),transparent)}
 .ft-inner{max-width:1280px;margin:0 auto}
-.ft-top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;margin-bottom:40px}
-.ft-brand .logo{font-family:'Playfair Display',serif;font-size:17px;letter-spacing:3px;color:var(--gold);margin-bottom:10px}
-.ft-brand p{font-size:13px;color:rgba(255,255,255,0.35);line-height:1.7}
-.ft-col h4{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:16px}
-.ft-col button{display:block;background:none;border:none;font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:10px;cursor:pointer;font-family:'Inter',sans-serif;text-align:left;transition:color 0.2s}
-.ft-col button:hover{color:var(--gold)}
-.ft-bottom{border-top:1px solid rgba(255,255,255,0.07);padding-top:24px;display:flex;justify-content:space-between;align-items:center}
-.ft-bottom p{font-size:12px;color:rgba(255,255,255,0.28)}
+.ft-top{display:grid;gap:40px;margin-bottom:40px}
+.ft-col-brand .logo{font-family:'Playfair Display',serif;font-size:18px;letter-spacing:3px;margin-bottom:12px}
+.ft-col-brand p{font-size:13px;line-height:1.7;margin-bottom:20px;opacity:0.6}
+.ft-social{display:flex;gap:10px;flex-wrap:wrap}
+.ft-social-btn{width:38px;height:38px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.22s;text-decoration:none;font-size:16px}
+.ft-social-btn:hover{background:rgba(184,150,78,0.15);border-color:rgba(184,150,78,0.4);transform:translateY(-2px)}
+.ft-social-btn svg{width:16px;height:16px;transition:fill 0.22s}
+.ft-col h4{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:18px;opacity:0.4}
+.ft-col a,.ft-col button{display:block;font-size:13px;margin-bottom:10px;cursor:pointer;transition:color 0.2s;padding:0;background:none;border:none;text-align:left;font-family:'Inter',sans-serif;opacity:0.55}
+.ft-col a:hover,.ft-col button:hover{opacity:1;color:var(--gold)}
+.ft-divider{border:none;margin-bottom:24px}
+.ft-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.ft-bottom p{font-size:12px;opacity:0.28}
+.ft-bottom-social{display:flex;gap:12px;align-items:center}
+.ft-bottom-social a{opacity:0.3;transition:opacity 0.2s;font-size:12px}
+.ft-bottom-social a:hover{opacity:0.7;color:var(--gold)}
+.ft-countries{display:flex;gap:14px;flex-wrap:wrap}
+.ft-country{font-size:11px;opacity:0.2;display:flex;align-items:center;gap:5px}
 
 @media(max-width:1024px){
   .hero-wrap{grid-template-columns:1fr;gap:48px}
   .info-grid,.det-grid,.nos-main,.cont-main{grid-template-columns:1fr}
   .det-info{position:static}
-  .ft-top{grid-template-columns:1fr 1fr}
+  body.nav-side #app-wrap{margin-left:0}
+  body.nav-side nav.site-nav{position:relative;width:100%;height:auto}
+  body.nav-side .nav-inner{flex-direction:row;padding:0 20px;height:60px}
+  body.nav-side .nav-links{flex-direction:row}
+  body.nav-side .nav-logo{margin-bottom:0}
 }
 @media(max-width:768px){
-  .nav-links{display:none}.hamburger{display:flex}
-  .hero{padding:60px 20px}.section-info,.props-wrap{padding:50px 20px}
-  #page-detalle,#page-nosotros,#page-contacto{padding:0}
-  .nos-body,.cont-body{padding:48px 20px}
+  .nav-links{display:none!important}.hamburger{display:flex!important}
+  body.nav-float nav.site-nav{border-radius:0;top:0;left:0;right:0;transform:none;width:100%;max-width:none}
+  body.nav-float #app-wrap{padding-top:60px}
+  .hero,.section-info,.props-wrap,#page-detalle,.nos-body,.cont-body{padding-left:20px;padding-right:20px}
   .props-grid{grid-template-columns:1fr}
-  .nos-stats-row{grid-template-columns:1fr;gap:32px}
-  .f-row{grid-template-columns:1fr}
   .vals-grid{grid-template-columns:1fr}
-  .ft-top{grid-template-columns:1fr}
-  .ft-bottom{flex-direction:column;gap:8px;text-align:center}
-  .det-inner{padding:20px}
+  .f-row{grid-template-columns:1fr}
+  .ft-bottom{flex-direction:column;text-align:center}
+  .ft-countries{justify-content:center}
 }
 </style>
 </head>
-<body>
+<body class="nav-top">
 
-<nav>
+<nav class="site-nav">
   <div class="nav-inner">
-    <div class="nav-logo" onclick="goPage('inicio')">RABBITTSCAPITAL<small>REAL ESTATE</small></div>
-    <ul class="nav-links">
-      <li><button class="active" id="nb-inicio" onclick="goPage('inicio')">Inicio</button></li>
-      <li><button id="nb-propiedades" onclick="goPage('propiedades')">Propiedades</button></li>
-      <li><button id="nb-nosotros" onclick="goPage('nosotros')">Nosotros</button></li>
-      <li><button class="nav-cta" id="nb-contacto" onclick="goPage('contacto')">Contacto</button></li>
-    </ul>
+    <div class="nav-logo" id="nav-logo-el" onclick="goPage('inicio')">RABBITTSCAPITAL<small>REAL ESTATE</small></div>
+    <ul class="nav-links" id="nav-links-el"></ul>
     <button class="hamburger" onclick="document.getElementById('mob-menu').classList.toggle('open')"><span></span><span></span><span></span></button>
   </div>
-  <div id="mob-menu">
-    <button onclick="goPage('inicio');closeMob()">Inicio</button>
-    <button onclick="goPage('propiedades');closeMob()">Propiedades</button>
-    <button onclick="goPage('nosotros');closeMob()">Nosotros</button>
-    <button onclick="goPage('contacto');closeMob()">Contacto</button>
-  </div>
+  <div id="mob-menu"></div>
 </nav>
 
-<!-- INICIO -->
+<div id="app-wrap">
+
 <div class="page active" id="page-inicio">
-  <div class="hero">
+  <div class="hero" id="hero-section" style="background:var(--navy)">
     <div class="hero-wrap">
       <div>
-        <div class="hero-eyebrow">Inversión Inmobiliaria Premium</div>
-        <h1 id="d-hero-title">Propiedades que <em>construyen tu patrimonio</em></h1>
-        <p class="hero-p" id="d-hero-sub">Acceso exclusivo a oportunidades inmobiliarias en Chile, Miami, México y Paraguay. Capital inteligente en los mercados más dinámicos de América.</p>
-        <div class="hero-btns">
-          <button class="btn btn-gold" id="d-btn1" onclick="goPage('propiedades')">Ver Propiedades</button>
-          <button class="btn btn-outline" id="d-btn2" onclick="goPage('contacto')">Hablar con un asesor</button>
-        </div>
+        <div class="hero-eyebrow page-enter-fade hs1" id="d-hero-eyebrow">Inversión Inmobiliaria Premium</div>
+        <h1 class="page-enter-slide-up hs2" id="d-hero-title">Propiedades que <em>construyen tu patrimonio</em></h1>
+        <p class="hero-p page-enter-slide-up hs3" id="d-hero-sub">Acceso exclusivo a oportunidades inmobiliarias en Chile, Miami, México y Paraguay.</p>
+        <div class="hero-btns page-enter-slide-up hs4" id="d-hero-btns"></div>
       </div>
-      <div class="hero-right">
-        <div class="h-metric"><div class="h-metric-lbl">Activos gestionados</div><div class="h-metric-val" id="d-s1n">+$50M</div><div class="h-metric-sub" id="d-s1l">En portafolio inmobiliario activo</div></div>
-        <div class="countries">
-          <div class="ctag">🇨🇱 Chile</div><div class="ctag">🇺🇸 Miami</div>
-          <div class="ctag">🇲🇽 México</div><div class="ctag">🇵🇾 Paraguay</div>
-        </div>
-        <div class="h-metric"><div class="h-metric-lbl">Clientes</div><div class="h-metric-val" id="d-s2n">+500</div><div class="h-metric-sub" id="d-s2l">Inversores confían en nosotros</div></div>
-      </div>
+      <div class="hero-right page-enter-slide-up hs5" id="d-hero-metrics"></div>
     </div>
   </div>
-  <div class="section-info">
+  <div class="section-info" id="info-section" style="background:var(--off)">
     <div class="s-inner">
-      <div class="eyebrow">¿Por qué elegirnos?</div>
-      <div class="s-title" id="d-info-title">Experiencia que genera resultados reales</div>
+      <div class="eyebrow rv" id="d-info-eyebrow">¿Por qué elegirnos?</div>
+      <div class="s-title rv" id="d-info-title">Experiencia que genera resultados reales</div>
       <div class="info-grid">
         <div>
-          <p class="info-desc" id="d-info-desc">Somos especialistas en conectar inversores con oportunidades inmobiliarias de alto retorno.</p>
+          <p class="info-desc rv" id="d-info-desc">Somos especialistas en conectar inversores con oportunidades inmobiliarias de alto retorno.</p>
           <div class="tips-list" id="d-tips"></div>
         </div>
-        <div class="stats-grid" id="d-stats"></div>
+        <div class="stats-grid" id="d-stats" style="grid-template-columns:1fr 1fr"></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- PROPIEDADES -->
-<div class="page" id="page-propiedades">
-  <div class="page-banner">
-    <div class="eyebrow" style="justify-content:center">Portafolio</div>
-    <h1>Nuestras Propiedades</h1>
+<div class="page" id="page-propiedades" style="background:var(--off)">
+  <div class="page-banner" id="props-banner" style="background:var(--navy)">
+    <div class="eyebrow page-enter-fade hs1" style="justify-content:center" id="d-props-eyebrow">Portafolio</div>
+    <h1 class="page-enter-slide-up hs2" id="d-props-title">Nuestras Propiedades</h1>
   </div>
   <div class="props-wrap">
-    <div class="filter-row">
-      <button class="ftab active" onclick="filterP('todos',this)">Todos</button>
-      <button class="ftab" onclick="filterP('Chile',this)">🇨🇱 Chile</button>
-      <button class="ftab" onclick="filterP('Miami',this)">🇺🇸 Miami</button>
-      <button class="ftab" onclick="filterP('México',this)">🇲🇽 México</button>
-      <button class="ftab" onclick="filterP('Paraguay',this)">🇵🇾 Paraguay</button>
-    </div>
+    <div class="filter-row" id="filter-row"></div>
     <div class="props-grid" id="props-grid"><div style="grid-column:1/-1;text-align:center;padding:80px;color:var(--muted)">Cargando...</div></div>
   </div>
 </div>
 
-<!-- DETALLE -->
-<div class="page" id="page-detalle">
+<div class="page" id="page-detalle" style="background:var(--off)">
   <div class="det-inner">
     <button class="det-back" onclick="goPage('propiedades')">← Volver a propiedades</button>
     <div class="det-grid" id="det-content"></div>
   </div>
 </div>
 
-<!-- NOSOTROS -->
-<div class="page" id="page-nosotros">
-  <div class="nos-banner">
-    <div class="eyebrow" style="justify-content:center">Nuestra historia</div>
-    <h1 id="d-nos-title">Quiénes somos</h1>
-    <p id="d-nos-sub">Tu socio estratégico en la construcción de patrimonio inmobiliario.</p>
+<div class="page" id="page-nosotros" style="background:var(--white)">
+  <div class="nos-banner" id="nos-banner" style="background:var(--navy)">
+    <div class="eyebrow page-enter-fade hs1" style="justify-content:center" id="d-nos-eyebrow">Nuestra historia</div>
+    <h1 class="page-enter-slide-up hs2" id="d-nos-title">Quiénes somos</h1>
+    <p class="page-enter-slide-up hs3" id="d-nos-sub">Tu socio estratégico en la construcción de patrimonio.</p>
   </div>
   <div class="nos-body">
     <div class="nos-main">
-      <div class="nos-text">
+      <div class="nos-text rv-l">
         <h2 id="d-nos-h2">Democratizando la inversión inmobiliaria</h2>
-        <p id="d-nos-p1">Rabbittscapital nació con la visión de abrir las puertas del mercado inmobiliario premium a inversores que buscan diversificar su patrimonio en los destinos más estratégicos de América.</p>
-        <p id="d-nos-p2">Con un equipo de expertos en finanzas, derecho e inmobiliaria, te ofrecemos acceso a oportunidades exclusivas con acompañamiento personalizado.</p>
+        <div id="d-nos-paras"></div>
       </div>
-      <div class="vals-grid">
-        <div class="val-card"><h3>Misión</h3><p id="d-mision">Conectar inversores con las mejores oportunidades inmobiliarias con transparencia y excelencia.</p></div>
-        <div class="val-card"><h3>Visión</h3><p id="d-vision">Ser el referente latinoamericano en inversión inmobiliaria internacional para 2030.</p></div>
-        <div class="val-card"><h3>Integridad</h3><p>Operamos con total transparencia. Cada transacción refleja nuestros valores.</p></div>
-        <div class="val-card"><h3>Resultados</h3><p>No vendemos promesas, entregamos retornos medibles y verificables.</p></div>
-      </div>
+      <div class="vals-grid rv-r" id="d-vals-grid"></div>
     </div>
-    <div class="nos-stats-row" id="d-nos-stats">
-      <div><div class="ns-n">+500</div><div class="ns-t">Clientes activos</div></div>
-      <div><div class="ns-n">4</div><div class="ns-t">Países de operación</div></div>
-      <div><div class="ns-n">8+</div><div class="ns-t">Años de experiencia</div></div>
-    </div>
+    <div class="nos-stats-row rv" id="d-nos-stats" style="grid-template-columns:repeat(3,1fr)"></div>
   </div>
 </div>
 
-<!-- CONTACTO -->
-<div class="page" id="page-contacto">
-  <div class="cont-banner">
-    <div class="eyebrow" style="justify-content:center">Contacto</div>
-    <h1 id="d-cont-title">Hablemos de tu inversión</h1>
-    <p id="d-cont-sub">Nuestros asesores están listos para guiarte.</p>
+<div class="page" id="page-contacto" style="background:var(--off)">
+  <div class="cont-banner" id="cont-banner" style="background:var(--navy)">
+    <div class="eyebrow page-enter-fade hs1" style="justify-content:center" id="d-cont-eyebrow">Contacto</div>
+    <h1 class="page-enter-slide-up hs2" id="d-cont-title">Hablemos de tu inversión</h1>
+    <p class="page-enter-slide-up hs3" id="d-cont-sub">Nuestros asesores están listos para guiarte.</p>
   </div>
   <div class="cont-body">
     <div class="cont-main">
-      <div class="cont-info-card">
-        <h3>Información</h3>
-        <div class="ci-item"><div class="ci-icon">✉️</div><div><div class="ci-lbl">Email</div><div class="ci-val" id="d-email">contacto@rabbittscapital.com</div></div></div>
-        <div class="ci-item"><div class="ci-icon">📞</div><div><div class="ci-lbl">Teléfono</div><div class="ci-val" id="d-phone">+56 9 1234 5678</div></div></div>
-        <div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-lbl">Oficina</div><div class="ci-val" id="d-addr">Santiago, Chile</div></div></div>
-        <div class="ci-item"><div class="ci-icon">💬</div><div><div class="ci-lbl">WhatsApp</div><div class="ci-val" id="d-wa">+56 9 1234 5678</div></div></div>
+      <div class="cont-info-card rv-l">
+        <h3 id="d-cont-info-title">Información de contacto</h3>
+        <div id="d-cont-items"></div>
       </div>
-      <div class="cont-form-card">
-        <h3>Envíanos un mensaje</h3>
-        <form onsubmit="submitForm(event)">
-          <div class="f-row">
-            <div class="f-field"><label>Nombre</label><input type="text" id="f-nombre" placeholder="Tu nombre completo" required></div>
-            <div class="f-field"><label>Email</label><input type="email" id="f-email" placeholder="tu@email.com" required></div>
-          </div>
-          <div class="f-row">
-            <div class="f-field"><label>Teléfono</label><input type="tel" id="f-tel" placeholder="+56 9 ..."></div>
-            <div class="f-field"><label>País de interés</label><select id="f-pais"><option value="">Seleccionar...</option><option>Chile</option><option>Miami</option><option>México</option><option>Paraguay</option></select></div>
-          </div>
-          <div class="f-field"><label>Mensaje</label><textarea id="f-msg" placeholder="Cuéntanos sobre tu proyecto de inversión..."></textarea></div>
-          <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;margin-top:4px" id="d-cont-btn">Enviar mensaje →</button>
-        </form>
+      <div class="cont-form-card rv-r">
+        <h3 id="d-cont-form-title">Envíanos un mensaje</h3>
+        <form onsubmit="submitForm(event)" id="cont-form"></form>
       </div>
     </div>
   </div>
 </div>
 
-<footer>
+<footer id="site-footer" style="background:var(--navy);padding:56px 40px 32px;color:#fff">
   <div class="ft-inner">
-    <div class="ft-top">
-      <div class="ft-brand"><div class="logo">RABBITTSCAPITAL</div><p id="d-footer-text">Inversiones inmobiliarias premium en Chile, Miami, México y Paraguay.</p></div>
-      <div class="ft-col"><h4>Páginas</h4><button onclick="goPage('inicio')">Inicio</button><button onclick="goPage('propiedades')">Propiedades</button><button onclick="goPage('nosotros')">Nosotros</button><button onclick="goPage('contacto')">Contacto</button></div>
-      <div class="ft-col"><h4>Contacto</h4><button id="d-ft-email">contacto@rabbittscapital.com</button><button id="d-ft-ig">Instagram</button><button id="d-ft-wa">WhatsApp</button></div>
+    <div class="ft-top" id="ft-top-cols"></div>
+    <hr class="ft-divider" id="ft-divider" style="border-top:1px solid rgba(255,255,255,0.07)">
+    <div class="ft-bottom">
+      <p id="ft-copy">© 2025 Rabbittscapital. Todos los derechos reservados.</p>
+      <div class="ft-bottom-social" id="ft-bottom-social"></div>
+      <div class="ft-countries" id="ft-countries"></div>
     </div>
-    <div class="ft-bottom"><p id="d-footer-copy">© 2025 Rabbittscapital. Todos los derechos reservados.</p><p style="color:rgba(255,255,255,0.2);font-size:11px">Chile · Miami · México · Paraguay</p></div>
   </div>
 </footer>
+
+</div>
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
 import{getFirestore,doc,onSnapshot,collection,query,orderBy,addDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+
 const app=initializeApp({apiKey:"AIzaSyBu2UMpFI-aD5yZIMDtkNrBaej8tUwXML8",authDomain:"rabitocapital.firebaseapp.com",projectId:"rabitocapital",storageBucket:"rabitocapital.firebasestorage.app",messagingSenderId:"240408355009",appId:"1:240408355009:web:8fb2b84f9c7f45e0637440"});
 const db=getFirestore(app);
-let allProps=[];
+let allProps=[],siteData={};
 
+// ===== CONTENIDO =====
 onSnapshot(doc(db,"sitio","contenido"),snap=>{
   if(!snap.exists())return;
   const d=snap.data();
-  const s=(id,v)=>{const el=document.getElementById(id);if(el&&v!=null)el.textContent=v;};
-  const sh=(id,v)=>{const el=document.getElementById(id);if(el&&v!=null)el.innerHTML=v;};
-  sh('d-hero-title',d.heroTitle);s('d-hero-sub',d.heroSub);s('d-btn1',d.heroBtn1);s('d-btn2',d.heroBtn2);
-  s('d-info-title',d.infoTitle);s('d-info-desc',d.infoDesc);
-  s('d-nos-title',d.nosTitle);s('d-nos-sub',d.nosSub);s('d-nos-h2',d.nosH2);
-  s('d-nos-p1',d.nosP1);s('d-nos-p2',d.nosP2);s('d-mision',d.nosMision);s('d-vision',d.nosVision);
-  s('d-cont-title',d.contTitle);s('d-cont-sub',d.contSub);
-  s('d-email',d.contEmail);s('d-phone',d.contPhone);s('d-addr',d.contAddr);s('d-wa',d.contWa);
-  s('d-cont-btn',d.contBtn);s('d-footer-text',d.footerText);s('d-footer-copy',d.footerCopy);
-  s('d-ft-email',d.contEmail);s('d-ft-ig',d.footerIg);s('d-ft-wa',d.contWa);
-  if(d.tips){document.getElementById('d-tips').innerHTML=d.tips.map((t,i)=>`<div class="tip-row"><div class="tip-n">${i+1}</div><div class="tip-c"><h4>${t.titulo}</h4><p>${t.desc}</p></div></div>`).join('');}
-  if(d.stats){
-    document.getElementById('d-stats').innerHTML=d.stats.map(s=>`<div class="stat-card"><div class="stat-n">${s.num}</div><div class="stat-l">${s.lbl}</div></div>`).join('');
-    document.getElementById('d-nos-stats').innerHTML=d.stats.slice(0,3).map(s=>`<div><div class="ns-n">${s.num}</div><div class="ns-t">${s.lbl}</div></div>`).join('');
-    if(d.stats[0]){document.getElementById('d-s1n').textContent=d.stats[0].num;document.getElementById('d-s1l').textContent=d.stats[0].lbl;}
-    if(d.stats[1]){document.getElementById('d-s2n').textContent=d.stats[1].num;document.getElementById('d-s2l').textContent=d.stats[1].lbl;}
-  }
+  siteData=d;
+  applyContent(d);
 });
 
+function applyContent(d){
+  const s=(id,v)=>{const el=document.getElementById(id);if(el&&v!=null)el.textContent=v;};
+  const sh=(id,v)=>{const el=document.getElementById(id);if(el&&v!=null)el.innerHTML=v;};
+
+  // Nav
+  document.body.className='nav-'+(d.navPos||'top');
+  const navLogo=document.getElementById('nav-logo-el');
+  if(navLogo){navLogo.innerHTML=`${d.logo||'RABBITTSCAPITAL'}<small>${d.logoSub||'REAL ESTATE'}</small>`;}
+
+  // Build nav links
+  buildNav(d);
+
+  // Hero
+  sh('d-hero-title',d.heroTitle||'Propiedades que <em>construyen tu patrimonio</em>');
+  s('d-hero-sub',d.heroSub||'');s('d-hero-eyebrow',d.heroEyebrow||'Inversión Inmobiliaria Premium');
+  const btns=document.getElementById('d-hero-btns');
+  if(btns&&d.heroBtns&&d.heroBtns.length){
+    btns.innerHTML=d.heroBtns.map(b=>`<button class="btn ${b.style==='outline'?'btn-outline':'btn-gold'}" onclick="goPage('${b.page||'propiedades'}')">${b.label}</button>`).join('');
+  } else if(btns&&!d.heroBtns){
+    btns.innerHTML=`<button class="btn btn-gold" onclick="goPage('propiedades')">Ver Propiedades</button><button class="btn btn-outline" onclick="goPage('contacto')">Hablar con un asesor</button>`;
+  }
+  // Hero metrics
+  const metrics=document.getElementById('d-hero-metrics');
+  if(metrics&&d.heroMetrics&&d.heroMetrics.length){
+    metrics.innerHTML=d.heroMetrics.map(m=>{
+      if(m.type==='countries'){
+        return`<div class="countries">${(m.items||[]).map(c=>`<div class="ctag">${c}</div>`).join('')}</div>`;
+      }
+      return`<div class="h-metric"><div class="h-metric-lbl">${m.label||''}</div><div class="h-metric-val">${m.value||''}</div><div class="h-metric-sub">${m.sub||''}</div></div>`;
+    }).join('');
+  } else if(metrics&&!d.heroMetrics){
+    metrics.innerHTML=`<div class="h-metric"><div class="h-metric-lbl">Activos gestionados</div><div class="h-metric-val">+$50M</div><div class="h-metric-sub">En portafolio activo</div></div><div class="countries"><div class="ctag">🇨🇱 Chile</div><div class="ctag">🇺🇸 Miami</div><div class="ctag">🇲🇽 México</div><div class="ctag">🇵🇾 Paraguay</div></div><div class="h-metric"><div class="h-metric-lbl">Clientes</div><div class="h-metric-val">+500</div><div class="h-metric-sub">Inversores confían en nosotros</div></div>`;
+  }
+
+  // Info
+  s('d-info-title',d.infoTitle);s('d-info-desc',d.infoDesc);s('d-info-eyebrow',d.infoEyebrow||'¿Por qué elegirnos?');
+  if(d.tips){document.getElementById('d-tips').innerHTML=d.tips.map((t,i)=>`<div class="tip-row rv d${Math.min(i+1,8)}"><div class="tip-n">${i+1}</div><div class="tip-c"><h4>${t.titulo}</h4><p>${t.desc}</p></div></div>`).join('');initReveal();}
+  if(d.stats){
+    const cols=d.statsCols||2;
+    const sg=document.getElementById('d-stats');
+    sg.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+    sg.innerHTML=d.stats.map(s=>`<div class="stat-card rv"><div class="stat-n">${s.num}</div><div class="stat-l">${s.lbl}</div></div>`).join('');
+    initReveal();
+  }
+
+  // Nosotros
+  s('d-nos-title',d.nosTitle);s('d-nos-sub',d.nosSub);s('d-nos-h2',d.nosH2);s('d-nos-eyebrow',d.nosEyebrow||'Nuestra historia');
+  if(d.nosParas){document.getElementById('d-nos-paras').innerHTML=d.nosParas.map(p=>`<p>${p}</p>`).join('');}
+  if(d.nosStats){
+    const nsr=document.getElementById('d-nos-stats');
+    nsr.style.gridTemplateColumns=`repeat(${Math.min(d.nosStats.length,4)},1fr)`;
+    nsr.innerHTML=d.nosStats.map(s=>`<div><div class="ns-n">${s.num}</div><div class="ns-t">${s.lbl}</div></div>`).join('');
+  }
+  if(d.nosVals){document.getElementById('d-vals-grid').innerHTML=d.nosVals.map(v=>`<div class="val-card"><h3>${v.titulo}</h3><p>${v.texto}</p></div>`).join('');}
+
+  // Contacto
+  s('d-cont-title',d.contTitle);s('d-cont-sub',d.contSub);s('d-cont-eyebrow',d.contEyebrow||'Contacto');
+  s('d-cont-info-title',d.contInfoTitle||'Información de contacto');
+  s('d-cont-form-title',d.contFormTitle||'Envíanos un mensaje');
+  if(d.contItems){document.getElementById('d-cont-items').innerHTML=d.contItems.map(it=>`<div class="ci-item"><div class="ci-icon">${it.icon||'📞'}</div><div><div class="ci-lbl">${it.label}</div><div class="ci-val">${it.value}</div></div></div>`).join('');}
+  // Form
+  buildContactForm(d);
+
+  // Propiedades page
+  s('d-props-title',d.propsTitle||'Nuestras Propiedades');s('d-props-eyebrow',d.propsEyebrow||'Portafolio');
+  buildFilters(d.propsFilters||['todos','Chile','Miami','México','Paraguay']);
+
+  // Colors
+  applyColors(d);
+
+  // Animaciones
+  applyAnimSettings(d);
+
+  // Footer
+  buildFooter(d);
+}
+
+function buildNav(d){
+  const pages=d.navPages||[{id:'inicio',label:'Inicio'},{id:'propiedades',label:'Propiedades'},{id:'nosotros',label:'Nosotros'},{id:'contacto',label:'Contacto',cta:true}];
+  const ul=document.getElementById('nav-links-el');
+  ul.innerHTML=pages.map(p=>`<li><button class="${p.cta?'nav-cta-btn':''}" id="nb-${p.id}" onclick="goPage('${p.id}')">${p.label}</button></li>`).join('');
+  const mob=document.getElementById('mob-menu');
+  mob.innerHTML=pages.map(p=>`<button onclick="goPage('${p.id}');closeMob()">${p.label}</button>`).join('');
+}
+
+function buildFilters(filters){
+  document.getElementById('filter-row').innerHTML=filters.map((f,i)=>`<button class="ftab${i===0?' active':''}" onclick="filterP('${f===''?'todos':f}',this)">${f==='todos'||f===''?'Todos':f==='Chile'?'🇨🇱 Chile':f==='Miami'?'🇺🇸 Miami':f==='México'?'🇲🇽 México':f==='Paraguay'?'🇵🇾 Paraguay':f}</button>`).join('');
+}
+
+function buildContactForm(d){
+  const form=document.getElementById('cont-form');
+  const fields=d.contFormFields||[{type:'text',id:'f-nombre',label:'Nombre',placeholder:'Tu nombre completo',req:true,half:true},{type:'email',id:'f-email',label:'Email',placeholder:'tu@email.com',req:true,half:true},{type:'tel',id:'f-tel',label:'Teléfono',placeholder:'+56 9 ...',half:true},{type:'select',id:'f-pais',label:'País de interés',options:['','Chile','Miami','México','Paraguay'],half:true},{type:'textarea',id:'f-msg',label:'Mensaje',placeholder:'Cuéntanos sobre tu inversión...'},{type:'submit',label:d.contBtn||'Enviar mensaje →'}];
+  let html='';
+  let inRow=false;
+  fields.forEach(f=>{
+    if(f.type==='submit'){if(inRow){html+='</div>';inRow=false;}html+=`<button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;margin-top:4px" id="d-cont-btn">${f.label}</button>`;return;}
+    if(f.half){if(!inRow){html+='<div class="f-row">';inRow=true;}else{/* second */}}
+    else{if(inRow){html+='</div>';inRow=false;}}
+    if(f.type==='select'){
+      html+=`<div class="f-field"><label>${f.label}</label><select id="${f.id}">${(f.options||[]).map(o=>`<option value="${o}">${o||'Seleccionar...'}</option>`).join('')}</select></div>`;
+    } else if(f.type==='textarea'){
+      html+=`<div class="f-field"><label>${f.label}</label><textarea id="${f.id}" placeholder="${f.placeholder||''}"></textarea></div>`;
+    } else {
+      html+=`<div class="f-field"><label>${f.label}</label><input type="${f.type||'text'}" id="${f.id}" placeholder="${f.placeholder||''}" ${f.req?'required':''}></div>`;
+    }
+    if(f.half&&inRow&&fields[fields.indexOf(f)+1]&&!fields[fields.indexOf(f)+1].half){html+='</div>';inRow=false;}
+  });
+  if(inRow)html+='</div>';
+  form.innerHTML=html;
+}
+
+function applyColors(d){
+  const c=d.colores||{};
+  Object.entries(c).forEach(([k,v])=>document.documentElement.style.setProperty(k,v));
+  if(c['--hero-bg']){const hs=document.getElementById('hero-section');if(hs)hs.style.background=c['--hero-bg'];}
+  if(c['--info-bg']){const is=document.getElementById('info-section');if(is)is.style.background=c['--info-bg'];}
+  const banners=['props-banner','nos-banner','cont-banner'];
+  banners.forEach(id=>{const el=document.getElementById(id);if(el&&c['--banner-bg'])el.style.background=c['--banner-bg'];});
+}
+
+function applyAnimSettings(d){
+  const a=d.animaciones||{};
+  if(a.duracion){document.documentElement.style.setProperty('--anim-dur',a.duracion+'s');}
+  if(a.tipo){
+    const ease={suave:'cubic-bezier(0.22,1,0.36,1)',lineal:'linear',rebote:'cubic-bezier(0.34,1.56,0.64,1)',elastico:'cubic-bezier(0.68,-0.55,0.265,1.55)'}[a.tipo]||'cubic-bezier(0.22,1,0.36,1)';
+    document.documentElement.style.setProperty('--anim-ease',ease);
+  }
+  if(a.desactivar){document.body.classList.add('no-anim');}else{document.body.classList.remove('no-anim');}
+  // Page transition class
+  window._pageAnim=a.transicion||'fade';
+}
+
+// ===== FOOTER =====
+function buildFooter(d){
+  const footer=document.getElementById('site-footer');
+  const ft=d.footer||{};
+  footer.style.background=ft.bg||'#0f2340';
+  footer.style.color=ft.textColor||'#fff';
+  footer.style.padding=ft.padding||'56px 40px 32px';
+
+  // Cols
+  const cols=ft.cols||[
+    {type:'brand',logo:'RABBITTSCAPITAL',desc:'Inversiones inmobiliarias premium en Chile, Miami, México y Paraguay.',socials:[]},
+    {type:'links',title:'Páginas',links:[{label:'Inicio',page:'inicio'},{label:'Propiedades',page:'propiedades'},{label:'Nosotros',page:'nosotros'},{label:'Contacto',page:'contacto'}]},
+    {type:'links',title:'Destinos',links:[{label:'🇨🇱 Chile',page:'propiedades',filter:'Chile'},{label:'🇺🇸 Miami',page:'propiedades',filter:'Miami'},{label:'🇲🇽 México',page:'propiedades',filter:'México'},{label:'🇵🇾 Paraguay',page:'propiedades',filter:'Paraguay'}]},
+    {type:'links',title:'Contacto',links:[{label:(d.contItems&&d.contItems[0]?d.contItems[0].value:'contacto@rabbittscapital.com'),href:'#'},{label:'Formulario de contacto',page:'contacto'}]}
+  ];
+  const colW=`repeat(${cols.length},1fr)`;
+  const ftTop=document.getElementById('ft-top-cols');
+  ftTop.style.gridTemplateColumns=colW;
+  ftTop.innerHTML=cols.map(col=>{
+    if(col.type==='brand'){
+      const socials=(col.socials||[]).map(s=>socialBtn(s)).join('');
+      return`<div class="ft-col ft-col-brand"><div class="logo" style="color:${ft.accentColor||'#b8964e'};font-family:'Playfair Display',serif">${col.logo||'RABBITTSCAPITAL'}</div><p style="color:${ft.textColor||'#fff'};opacity:0.55">${col.desc||''}</p><div class="ft-social">${socials}</div></div>`;
+    }
+    const links=(col.links||[]).map(l=>{
+      if(l.href) return`<a href="${l.href}" style="color:${ft.textColor||'#fff'}">${l.label}</a>`;
+      return`<button onclick="goPage('${l.page||'inicio'}')${l.filter?`;filterByCountry('${l.filter}')`:''}" style="color:${ft.textColor||'#fff'}">${l.label}</button>`;
+    }).join('');
+    return`<div class="ft-col"><h4 style="color:${ft.textColor||'#fff'}">${col.title||''}</h4>${links}</div>`;
+  }).join('');
+
+  // Divider
+  const div=document.getElementById('ft-divider');
+  div.style.borderTop=`1px solid ${ft.dividerColor||'rgba(255,255,255,0.07)'}`;
+
+  // Bottom
+  const copyEl=document.getElementById('ft-copy');
+  if(copyEl)copyEl.textContent=ft.copy||'© 2025 Rabbittscapital. Todos los derechos reservados.';
+  copyEl.style.color=ft.textColor||'#fff';
+
+  // Bottom socials
+  const bSoc=document.getElementById('ft-bottom-social');
+  bSoc.innerHTML=(ft.bottomSocials||[]).map(s=>`<a href="${s.url||'#'}" target="_blank" style="color:${ft.textColor||'#fff'}">${s.label||s.red||''}</a>`).join('');
+
+  // Countries
+  const ctr=document.getElementById('ft-countries');
+  ctr.innerHTML=(ft.countries||['🇨🇱 Chile','🇺🇸 Miami','🇲🇽 México','🇵🇾 Paraguay']).map(c=>`<span class="ft-country" style="color:${ft.textColor||'#fff'}">${c}</span>`).join('');
+}
+
+function socialBtn(s){
+  const icons={instagram:`<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:rgba(255,255,255,0.6)"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`,whatsapp:`<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:rgba(255,255,255,0.6)"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`,linkedin:`<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:rgba(255,255,255,0.6)"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`};
+  return`<a class="ft-social-btn" href="${s.url||'#'}" target="_blank" title="${s.red||''}">${icons[s.red]||s.red||'🔗'}</a>`;
+}
+
+// ===== PROPS =====
 onSnapshot(query(collection(db,"propiedades"),orderBy("orden")),snap=>{
   allProps=snap.docs.map(d=>({id:d.id,...d.data()}));
   renderProps('todos');
 });
 
-window.filterP=function(pais,btn){document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderProps(pais);};
+window.filterP=function(pais,btn){
+  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');renderProps(pais);
+};
+window.filterByCountry=function(pais){
+  const btn=Array.from(document.querySelectorAll('.ftab')).find(b=>b.textContent.includes(pais));
+  if(btn)window.filterP(pais,btn);
+};
+
 function renderProps(pais){
   const list=pais==='todos'?allProps:allProps.filter(p=>p.pais===pais);
   const grid=document.getElementById('props-grid');
-  if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:80px;color:var(--muted)">No hay propiedades en este destino aún.</div>';return;}
-  grid.innerHTML=list.map(p=>`
-    <div class="prop-card" onclick="showDet('${p.id}')">
-      <div class="prop-img">
-        ${p.imagenes&&p.imagenes[0]?`<img src="${p.imagenes[0]}" alt="${p.titulo}">`:`<div class="prop-ph">🏢</div>`}
+  if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:80px;color:var(--muted)">No hay propiedades en este destino.</div>';return;}
+  grid.innerHTML=list.map(p=>{
+    const imgs=p.imagenes&&p.imagenes.length?p.imagenes:[];
+    const sliderImgs=imgs.length?imgs.map(img=>`<img class="prop-slider-img" src="${img}" alt="${p.titulo}">`).join(''):`<div class="prop-ph">🏢</div>`;
+    const dots=imgs.length>1?`<div class="slider-dots">${imgs.map((_,i)=>`<button class="slider-dot${i===0?' active':''}" onclick="slideCard(event,${imgs.length},-1,${i})"></button>`).join('')}</div>`:'';
+    const navBtns=imgs.length>1?`<button class="slider-prev" onclick="slideCard(event,${imgs.length},-1,-1)">‹</button><button class="slider-next" onclick="slideCard(event,${imgs.length},-1,1)">›</button>`:'';
+    return`<div class="prop-card" data-id="${p.id}">
+      <div class="prop-slider" data-idx="0" data-total="${imgs.length}">
+        ${navBtns}
         <span class="p-badge ${p.badge==='Oportunidad'?'p-badge-gold':'p-badge-navy'}">${p.badge||'Disponible'}</span>
         <span class="p-country">${p.pais}</span>
+        <div class="prop-slider-imgs">${sliderImgs}</div>
+        ${dots}
       </div>
-      <div class="prop-body">
+      <div class="prop-body" onclick="showDet('${p.id}')">
         <div class="prop-type">${p.tipo||'Propiedad'}</div>
         <h3 class="prop-titulo">${p.titulo}</h3>
         <p class="prop-desc-short">${(p.desc||'').substring(0,100)}${(p.desc||'').length>100?'...':''}</p>
         <div class="prop-footer">
-          <div><div class="prop-precio-lbl">${p.pais==='Chile'?'Precio en UF':'Precio USD'}</div><div class="prop-precio-val">${p.precio||'Consultar'}</div></div>
+          <div><div class="prop-precio-lbl">${p.pais==='Chile'?'Precio UF':'Precio USD'}</div><div class="prop-precio-val">${p.precio||'Consultar'}</div></div>
           <div style="text-align:right"><div class="prop-m2-lbl">Superficie</div><div class="prop-m2-val">${p.m2||'—'} m²</div></div>
         </div>
         <button class="prop-cta-btn">Ver detalles →</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
+
+// Card slider
+window.slideCard=function(e,total,detIdx,val){
+  e.stopPropagation();
+  const slider=e.target.closest('.prop-slider')||e.target.closest('.det-slider');
+  if(!slider)return;
+  let idx=parseInt(slider.dataset.idx||0);
+  if(val===-1&&detIdx===-1)idx=(idx-1+total)%total;
+  else if(val===1&&detIdx===-1)idx=(idx+1)%total;
+  else idx=val;
+  slider.dataset.idx=idx;
+  const track=slider.querySelector('.prop-slider-imgs,.det-slider-imgs');
+  if(track)track.style.transform=`translateX(-${idx*100}%)`;
+  slider.querySelectorAll('.slider-dot,.det-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+};
 
 window.showDet=function(id){
   const p=allProps.find(x=>x.id===id);if(!p)return;
   const imgs=p.imagenes&&p.imagenes.length?p.imagenes:[];
   const moneda=p.pais==='Chile'?'UF':'USD';
+  const sliderImgs=imgs.map(img=>`<img class="det-slider-img" src="${img}" alt="${p.titulo}">`).join('');
+  const dots=imgs.length>1?`<div class="slider-dots" style="bottom:12px">${imgs.map((_,i)=>`<button class="slider-dot det-dot${i===0?' active':''}" onclick="slideCard(event,${imgs.length},0,${i})"></button>`).join('')}</div>`:'';
+  const navBtns=imgs.length>1?`<button class="det-slider-prev" onclick="slideCard(event,${imgs.length},0,-1)">‹</button><button class="det-slider-next" onclick="slideCard(event,${imgs.length},0,1)">›</button>`:'';
   document.getElementById('det-content').innerHTML=`
-    <div class="det-gallery">
-      ${imgs.length?`<img class="gal-main" id="gal-main-img" src="${imgs[0]}" alt="${p.titulo}">`:`<div class="gal-ph">🏢</div>`}
-      ${imgs.length>1?`<div class="gal-thumbs">${imgs.map((img,i)=>`<img class="gal-thumb${i===0?' active':''}" src="${img}" onclick="setGImg('${img}',this)">`).join('')}</div>`:''}
+    <div class="det-gallery page-enter-fade">
+      ${imgs.length?`<div class="det-slider" data-idx="0" data-total="${imgs.length}">${navBtns}<div class="det-slider-imgs">${sliderImgs}</div>${dots}</div>`:`<div class="det-ph">🏢</div>`}
     </div>
-    <div class="det-info">
+    <div class="det-info page-enter-slide-up hs2">
       <span class="det-badge ${p.badge==='Oportunidad'?'p-badge-gold':'p-badge-navy'}">${p.badge||'Disponible'}</span>
       <div class="det-type">${p.tipo||'Propiedad'} · ${p.pais}</div>
       <h1 class="det-titulo">${p.titulo}</h1>
@@ -459,27 +714,49 @@ window.showDet=function(id){
   goPage('detalle');
 };
 
-window.setGImg=function(src,th){document.getElementById('gal-main-img').src=src;document.querySelectorAll('.gal-thumb').forEach(t=>t.classList.remove('active'));th.classList.add('active');};
-
+// ===== FORMULARIO =====
 window.submitForm=async function(e){
   e.preventDefault();
-  const btn=document.getElementById('d-cont-btn');btn.textContent='Enviando...';btn.disabled=true;
+  const btn=document.getElementById('d-cont-btn');
+  if(btn){btn.textContent='Enviando...';btn.disabled=true;}
   try{
-    await addDoc(collection(db,"contactos"),{nombre:document.getElementById('f-nombre').value,email:document.getElementById('f-email').value,tel:document.getElementById('f-tel').value,pais:document.getElementById('f-pais').value,mensaje:document.getElementById('f-msg').value,fecha:serverTimestamp()});
-    btn.textContent='✓ Mensaje enviado';btn.style.background='#2d6a4f';e.target.reset();
-  }catch(err){btn.textContent='Error — intenta de nuevo';btn.disabled=false;}
+    const data={fecha:serverTimestamp()};
+    e.target.querySelectorAll('input,textarea,select').forEach(f=>{if(f.id)data[f.id.replace('f-','')]=f.value;});
+    await addDoc(collection(db,"contactos"),data);
+    if(btn){btn.textContent='✓ Mensaje enviado';btn.style.background='#2d6a4f';}
+    e.target.reset();
+  }catch(err){if(btn){btn.textContent='Error — intenta de nuevo';btn.disabled=false;}}
 };
 
+// ===== PÁGINAS =====
 window.goPage=function(name){
+  const animClass='page-enter-'+(window._pageAnim||'fade');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  ['inicio','propiedades','nosotros','contacto'].forEach(n=>{
-    const el=document.getElementById('nb-'+n);
-    if(el)el.classList.toggle('active',n===name||(name==='detalle'&&n==='propiedades'));
+  const next=document.getElementById('page-'+name);
+  if(next){
+    next.classList.add('active');
+    next.querySelectorAll('.page-enter-fade,.page-enter-slide-up,.page-enter-slide-right,.page-enter-zoom').forEach(el=>{
+      el.style.animation='none';
+      requestAnimationFrame(()=>{el.style.animation='';});
+    });
+  }
+  document.querySelectorAll('[id^="nb-"]').forEach(b=>{
+    const bid=b.id.replace('nb-','');
+    b.classList.toggle('active',bid===name||(name==='detalle'&&bid==='propiedades'));
   });
-  window.scrollTo(0,0);
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(initReveal,80);
 };
 window.closeMob=function(){document.getElementById('mob-menu').classList.remove('open');};
+
+// ===== SCROLL REVEAL =====
+function initReveal(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+  },{threshold:0.1,rootMargin:'0px 0px -30px 0px'});
+  document.querySelectorAll('.rv,.rv-l,.rv-r,.rv-s').forEach(el=>obs.observe(el));
+}
+initReveal();
 </script>
 </body>
 </html>
