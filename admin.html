@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Rabbittscapital</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#0f0f0f;color:#fff;min-height:100vh}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:#0a0a0a;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:32px}
+#login-screen.hide{display:none}
+.login-logo{font-size:22px;letter-spacing:4px;color:#c9a84c}
+.login-box{background:#18181b;border:1px solid #2d2d2d;border-radius:16px;padding:40px;width:360px}
+.login-box h2{font-size:16px;font-weight:500;margin-bottom:24px;color:#ccc;text-align:center}
+.login-box input{width:100%;background:#111;border:1px solid #333;border-radius:8px;padding:12px 14px;color:#fff;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:12px}
+.login-box input:focus{border-color:#c9a84c}
+.login-box button{width:100%;background:#c9a84c;color:#000;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.login-error{color:#e55;font-size:12px;text-align:center;margin-top:8px;display:none}
+
+/* LAYOUT */
+#app{display:none;min-height:100vh}
+#app.show{display:flex}
+#sidebar{width:260px;background:#18181b;border-right:1px solid #2d2d2d;display:flex;flex-direction:column;height:100vh;position:sticky;top:0;overflow-y:auto;flex-shrink:0}
+#main{flex:1;overflow-y:auto;padding:32px}
+
+/* SIDEBAR */
+.sb-brand{padding:20px 16px;border-bottom:1px solid #2d2d2d}
+.sb-brand-logo{font-size:13px;letter-spacing:2px;color:#c9a84c;font-weight:600}
+.sb-brand-sub{font-size:11px;color:#555;margin-top:2px}
+.sb-menu{padding:12px 8px;flex:1}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;color:#888;font-size:13px;transition:all 0.2s;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
+.sb-item:hover{background:#222;color:#ccc}
+.sb-item.active{background:#222;color:#c9a84c}
+.sb-item-icon{font-size:15px;width:20px;text-align:center}
+.sb-footer{padding:16px;border-top:1px solid #2d2d2d}
+.sb-footer button{width:100%;background:none;border:1px solid #333;color:#666;padding:8px;border-radius:6px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif}
+.sb-footer button:hover{border-color:#c9a84c;color:#c9a84c}
+
+/* PANELS */
+.panel{display:none}
+.panel.active{display:block}
+.panel-title{font-size:22px;font-weight:500;margin-bottom:8px;color:#fff}
+.panel-sub{font-size:13px;color:#666;margin-bottom:28px}
+
+/* CARDS */
+.card{background:#18181b;border:1px solid #2d2d2d;border-radius:12px;padding:24px;margin-bottom:20px}
+.card-title{font-size:13px;font-weight:500;color:#c9a84c;letter-spacing:0.5px;margin-bottom:16px;text-transform:uppercase}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid.cols1{grid-template-columns:1fr}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;color:#666;letter-spacing:0.3px}
+.field input,.field textarea,.field select{background:#111;border:1px solid #2d2d2d;border-radius:8px;padding:10px 12px;color:#fff;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s}
+.field input:focus,.field textarea:focus{border-color:#c9a84c}
+.field textarea{resize:vertical;min-height:70px;line-height:1.5}
+.field input[type=color]{height:36px;padding:3px;cursor:pointer}
+
+/* SAVE BTN */
+.save-btn{background:#c9a84c;color:#000;border:none;border-radius:8px;padding:11px 24px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity 0.2s;display:flex;align-items:center;gap:8px}
+.save-btn:hover{opacity:0.85}
+.save-btn.saving{opacity:0.6;pointer-events:none}
+.save-status{font-size:12px;color:#2d8a4e;margin-left:12px;display:none}
+
+/* COLORS */
+.color-section{margin-bottom:20px}
+.color-section-title{font-size:12px;color:#888;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #2d2d2d}
+.color-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.color-item{display:flex;flex-direction:column;gap:4px}
+.color-item label{font-size:10px;color:#666}
+.color-item input[type=color]{width:100%;height:30px;border:1px solid #2d2d2d;border-radius:6px;background:#111;cursor:pointer;padding:2px}
+
+/* PROPIEDADES */
+.prop-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.prop-item{background:#111;border:1px solid #2d2d2d;border-radius:10px;padding:16px}
+.prop-item-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.prop-item-title{font-size:13px;font-weight:500;color:#c9a84c}
+.prop-remove{background:none;border:1px solid #333;color:#666;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-family:'DM Sans',sans-serif}
+.prop-remove:hover{border-color:#e55;color:#e55}
+.add-prop-btn{background:none;border:1px dashed #333;color:#666;padding:12px;border-radius:8px;cursor:pointer;font-size:13px;width:100%;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.add-prop-btn:hover{border-color:#c9a84c;color:#c9a84c}
+
+/* MENSAJES */
+.msg-item{background:#111;border:1px solid #2d2d2d;border-radius:10px;padding:16px;margin-bottom:10px}
+.msg-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.msg-nombre{font-size:14px;font-weight:500;color:#fff}
+.msg-fecha{font-size:11px;color:#555}
+.msg-pais{display:inline-block;background:rgba(201,168,76,0.1);color:#c9a84c;font-size:10px;padding:2px 8px;border-radius:10px;margin-bottom:6px}
+.msg-email{font-size:12px;color:#888;margin-bottom:4px}
+.msg-text{font-size:13px;color:#aaa;line-height:1.5}
+.no-msgs{color:#555;font-size:13px;text-align:center;padding:40px}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:#18181b;border:1px solid #2d2d2d;border-radius:10px;padding:16px;text-align:center}
+.stat-card-num{font-size:28px;font-weight:300;color:#c9a84c;font-family:Georgia,serif}
+.stat-card-lbl{font-size:11px;color:#555;margin-top:4px}
+
+/* STATUS BADGE */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600}
+.badge-green{background:rgba(45,138,78,0.15);color:#2d8a4e}
+.badge-gold{background:rgba(201,168,76,0.15);color:#c9a84c}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-logo">RABBITTSCAPITAL</div>
+  <div class="login-box">
+    <h2>Panel de Administración</h2>
+    <input type="text" id="login-user" placeholder="Usuario" autocomplete="off">
+    <input type="password" id="login-pass" placeholder="Contraseña" onkeydown="if(event.key==='Enter')doLogin()">
+    <button onclick="doLogin()">Entrar al panel</button>
+    <div class="login-error" id="login-error">Usuario o contraseña incorrectos</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sb-brand">
+      <div class="sb-brand-logo">RC Admin</div>
+      <div class="sb-brand-sub">Panel de administración</div>
+    </div>
+    <div class="sb-menu">
+      <button class="sb-item active" onclick="showPanel('dashboard',this)"><span class="sb-item-icon">📊</span> Dashboard</button>
+      <button class="sb-item" onclick="showPanel('contenido',this)"><span class="sb-item-icon">✏️</span> Contenido</button>
+      <button class="sb-item" onclick="showPanel('colores',this)"><span class="sb-item-icon">🎨</span> Colores</button>
+      <button class="sb-item" onclick="showPanel('propiedades',this)"><span class="sb-item-icon">🏢</span> Propiedades</button>
+      <button class="sb-item" onclick="showPanel('mensajes',this)"><span class="sb-item-icon">📬</span> Mensajes <span id="msg-badge" style="margin-left:auto;background:#c9a84c;color:#000;border-radius:10px;font-size:10px;padding:1px 6px;display:none">0</span></button>
+      <button class="sb-item" onclick="window.open('index.html','_blank')"><span class="sb-item-icon">👁</span> Ver sitio</button>
+    </div>
+    <div class="sb-footer">
+      <button onclick="doLogout()">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="panel-title">Dashboard</div>
+      <div class="panel-sub">Resumen general de tu sitio Rabbittscapital</div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-card-num" id="d-props">0</div><div class="stat-card-lbl">Propiedades</div></div>
+        <div class="stat-card"><div class="stat-card-num" id="d-msgs">0</div><div class="stat-card-lbl">Mensajes recibidos</div></div>
+        <div class="stat-card"><div class="stat-card-num">4</div><div class="stat-card-lbl">Países activos</div></div>
+        <div class="stat-card"><div class="stat-card-num"><span class="badge badge-green">En vivo</span></div><div class="stat-card-lbl">Estado del sitio</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Accesos rápidos</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <button class="save-btn" style="justify-content:center" onclick="showPanel('contenido',document.querySelector('.sb-item:nth-child(2)'))">✏️ Editar textos</button>
+          <button class="save-btn" style="justify-content:center" onclick="showPanel('propiedades',document.querySelector('.sb-item:nth-child(4)'))">🏢 Propiedades</button>
+          <button class="save-btn" style="justify-content:center" onclick="window.open('index.html','_blank')">👁 Ver sitio →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="panel" id="panel-contenido">
+      <div class="panel-title">Contenido del sitio</div>
+      <div class="panel-sub">Edita los textos y guarda. Los cambios se ven al instante en el sitio.</div>
+
+      <div class="card">
+        <div class="card-title">Navegación</div>
+        <div class="form-grid">
+          <div class="field"><label>Logo / Nombre empresa</label><input type="text" id="c-logo" placeholder="RABBITTSCAPITAL"></div>
+          <div class="field"><label>Menú ítem 1</label><input type="text" id="c-nav1" placeholder="Inicio"></div>
+          <div class="field"><label>Menú ítem 2</label><input type="text" id="c-nav2" placeholder="Información"></div>
+          <div class="field"><label>Menú ítem 3</label><input type="text" id="c-nav3" placeholder="Nosotros"></div>
+          <div class="field"><label>Menú ítem 4</label><input type="text" id="c-nav4" placeholder="Propiedades"></div>
+          <div class="field"><label>Botón menú (CTA)</label><input type="text" id="c-nav5" placeholder="Contacto"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Hero — Sección principal</div>
+        <div class="form-grid cols1">
+          <div class="field"><label>Título principal (usa &lt;em&gt;texto&lt;/em&gt; para dorado)</label><input type="text" id="c-hero-title" placeholder="Inversiones que transforman tu futuro"></div>
+          <div class="field"><label>Subtítulo</label><textarea id="c-hero-sub" placeholder="Propiedades exclusivas en Chile, Miami..."></textarea></div>
+        </div>
+        <div class="form-grid" style="margin-top:12px">
+          <div class="field"><label>Botón principal</label><input type="text" id="c-hero-btn1" placeholder="Ver Propiedades"></div>
+          <div class="field"><label>Botón secundario</label><input type="text" id="c-hero-btn2" placeholder="Contáctanos"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Sección Información</div>
+        <div class="form-grid cols1">
+          <div class="field"><label>Título</label><input type="text" id="c-info-title"></div>
+          <div class="field"><label>Descripción</label><textarea id="c-info-desc"></textarea></div>
+        </div>
+        <div style="margin-top:14px;font-size:11px;color:#666;margin-bottom:8px">TIPS (4 bloques)</div>
+        <div class="form-grid" id="tips-editor"></div>
+        <div style="margin-top:14px;font-size:11px;color:#666;margin-bottom:8px">ESTADÍSTICAS</div>
+        <div class="form-grid" id="stats-editor"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Sección Nosotros</div>
+        <div class="form-grid cols1">
+          <div class="field"><label>Título</label><input type="text" id="c-nos-title"></div>
+          <div class="field"><label>Párrafo 1</label><textarea id="c-nos-p1"></textarea></div>
+          <div class="field"><label>Párrafo 2</label><textarea id="c-nos-p2"></textarea></div>
+          <div class="field"><label>Misión</label><textarea id="c-nos-mision"></textarea></div>
+          <div class="field"><label>Visión</label><textarea id="c-nos-vision"></textarea></div>
+          <div class="field"><label>Valores</label><input type="text" id="c-nos-valores"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Sección Contacto</div>
+        <div class="form-grid">
+          <div class="field"><label>Título</label><input type="text" id="c-cont-title"></div>
+          <div class="field"><label>Subtítulo</label><input type="text" id="c-cont-sub"></div>
+          <div class="field"><label>Email</label><input type="text" id="c-cont-email"></div>
+          <div class="field"><label>Teléfono</label><input type="text" id="c-cont-phone"></div>
+          <div class="field"><label>Dirección</label><input type="text" id="c-cont-addr"></div>
+          <div class="field"><label>WhatsApp</label><input type="text" id="c-cont-wa"></div>
+          <div class="field"><label>Texto botón formulario</label><input type="text" id="c-cont-btn"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Pie de página</div>
+        <div class="form-grid">
+          <div class="field"><label>Texto footer</label><input type="text" id="c-footer-text"></div>
+          <div class="field"><label>Instagram</label><input type="text" id="c-footer-ig"></div>
+          <div class="field"><label>WhatsApp</label><input type="text" id="c-footer-wa"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;margin-top:8px">
+        <button class="save-btn" onclick="saveContenido(this)">💾 Guardar todos los cambios</button>
+        <span class="save-status" id="status-contenido">✓ Guardado correctamente</span>
+      </div>
+    </div>
+
+    <!-- COLORES -->
+    <div class="panel" id="panel-colores">
+      <div class="panel-title">Colores del sitio</div>
+      <div class="panel-sub">Cambia los colores de cada sección por separado. Se aplican al instante.</div>
+
+      <div class="card">
+        <div class="card-title">Vista previa de colores</div>
+        <div id="color-preview" style="height:8px;border-radius:4px;background:linear-gradient(90deg,var(--nav-bg,#0a0a0a),var(--hero-bg,#111),var(--info-bg,#f5f0e8),var(--nos-bg,#fff),var(--props-bg,#f5f0e8),var(--cont-bg,#0a0a0a))"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Navegación</div>
+        <div class="color-grid" id="color-nav"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Hero (Inicio)</div>
+        <div class="color-grid" id="color-hero"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Información</div>
+        <div class="color-grid" id="color-info"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tips</div>
+        <div class="color-grid" id="color-tips"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Nosotros</div>
+        <div class="color-grid" id="color-nos"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Propiedades</div>
+        <div class="color-grid" id="color-props"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Contacto</div>
+        <div class="color-grid" id="color-cont"></div>
+      </div>
+
+      <div style="display:flex;align-items:center;margin-top:8px">
+        <button class="save-btn" onclick="saveColores(this)">💾 Guardar colores</button>
+        <span class="save-status" id="status-colores">✓ Guardado correctamente</span>
+      </div>
+    </div>
+
+    <!-- PROPIEDADES -->
+    <div class="panel" id="panel-propiedades">
+      <div class="panel-title">Propiedades</div>
+      <div class="panel-sub">Agrega, edita o elimina propiedades. Se actualizan al instante en el sitio.</div>
+      <div class="prop-list" id="prop-list"></div>
+      <button class="add-prop-btn" onclick="addProp()">+ Agregar propiedad</button>
+      <div style="display:flex;align-items:center;margin-top:16px">
+        <button class="save-btn" onclick="saveProps(this)">💾 Guardar propiedades</button>
+        <span class="save-status" id="status-props">✓ Guardado correctamente</span>
+      </div>
+    </div>
+
+    <!-- MENSAJES -->
+    <div class="panel" id="panel-mensajes">
+      <div class="panel-title">Mensajes recibidos</div>
+      <div class="panel-sub">Formularios enviados por clientes desde el sitio web.</div>
+      <div id="msgs-list"><div class="no-msgs">Cargando mensajes...</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, deleteDoc, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBu2UMpFI-aD5yZIMDtkNrBaej8tUwXML8",
+  authDomain: "rabitocapital.firebaseapp.com",
+  projectId: "rabitocapital",
+  storageBucket: "rabitocapital.firebasestorage.app",
+  messagingSenderId: "240408355009",
+  appId: "1:240408355009:web:8fb2b84f9c7f45e0637440"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ===== LOGIN =====
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "rabbittscapital2025";
+
+window.doLogin = function() {
+  const u = document.getElementById('login-user').value;
+  const p = document.getElementById('login-pass').value;
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('login-screen').classList.add('hide');
+    document.getElementById('app').classList.add('show');
+    initAdmin();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+};
+
+window.doLogout = function() {
+  document.getElementById('login-screen').classList.remove('hide');
+  document.getElementById('app').classList.remove('show');
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+};
+
+// ===== NAVEGACION PANEL =====
+window.showPanel = function(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+};
+
+// ===== COLORES CONFIG =====
+const colorDefs = {
+  'color-nav': [
+    {var:'--nav-bg', label:'Fondo', default:'#0a0a0a'},
+    {var:'--nav-text', label:'Texto', default:'#ffffff'},
+    {var:'--nav-accent', label:'Acento/Logo', default:'#c9a84c'},
+  ],
+  'color-hero': [
+    {var:'--hero-bg', label:'Fondo', default:'#111111'},
+    {var:'--hero-text', label:'Título', default:'#ffffff'},
+    {var:'--hero-sub', label:'Subtítulo', default:'#c9a84c'},
+    {var:'--hero-btn-bg', label:'Botón fondo', default:'#c9a84c'},
+    {var:'--hero-btn-text', label:'Botón texto', default:'#0a0a0a'},
+  ],
+  'color-info': [
+    {var:'--info-bg', label:'Fondo', default:'#f5f0e8'},
+    {var:'--info-text', label:'Texto', default:'#1a1a1a'},
+    {var:'--info-accent', label:'Acento', default:'#c9a84c'},
+  ],
+  'color-tips': [
+    {var:'--tips-bg', label:'Fondo tarjeta', default:'#1a1a1a'},
+    {var:'--tips-text', label:'Texto', default:'#ffffff'},
+    {var:'--tips-accent', label:'Acento', default:'#c9a84c'},
+  ],
+  'color-nos': [
+    {var:'--nos-bg', label:'Fondo', default:'#ffffff'},
+    {var:'--nos-text', label:'Texto', default:'#1a1a1a'},
+    {var:'--nos-accent', label:'Acento', default:'#c9a84c'},
+  ],
+  'color-props': [
+    {var:'--props-bg', label:'Fondo sección', default:'#f5f0e8'},
+    {var:'--props-text', label:'Texto', default:'#1a1a1a'},
+    {var:'--props-accent', label:'Acento', default:'#c9a84c'},
+    {var:'--card-bg', label:'Tarjeta fondo', default:'#ffffff'},
+  ],
+  'color-cont': [
+    {var:'--cont-bg', label:'Fondo', default:'#0a0a0a'},
+    {var:'--cont-text', label:'Texto', default:'#ffffff'},
+    {var:'--cont-accent', label:'Acento', default:'#c9a84c'},
+    {var:'--cont-btn-bg', label:'Botón fondo', default:'#c9a84c'},
+    {var:'--cont-btn-text', label:'Botón texto', default:'#0a0a0a'},
+  ],
+};
+
+let currentColors = {};
+
+function buildColorPanels() {
+  Object.entries(colorDefs).forEach(([containerId, defs]) => {
+    const el = document.getElementById(containerId);
+    el.innerHTML = defs.map(d => `
+      <div class="color-item">
+        <label>${d.label}</label>
+        <input type="color" data-var="${d.var}" value="${currentColors[d.var] || d.default}"
+          oninput="previewColor(this.dataset.var, this.value)">
+      </div>
+    `).join('');
+  });
+}
+
+window.previewColor = function(cssVar, val) {
+  currentColors[cssVar] = val;
+};
+
+// ===== TIPS & STATS EDITORS =====
+const defaultTips = [
+  {titulo:'Mercados Clave', desc:'Presencia en Chile, Miami, México y Paraguay.'},
+  {titulo:'Rentabilidad', desc:'Retornos superiores al promedio del mercado.'},
+  {titulo:'Asesoría Integral', desc:'Te acompañamos en cada etapa de tu inversión.'},
+  {titulo:'Seguridad Jurídica', desc:'Contratos transparentes y respaldo legal total.'},
+];
+const defaultStats = [
+  {num:'+500', lbl:'Clientes activos'},
+  {num:'4', lbl:'Países de operación'},
+  {num:'+$50M', lbl:'En activos gestionados'},
+  {num:'8+', lbl:'Años de experiencia'},
+];
+
+function buildTipsEditor(tips) {
+  const el = document.getElementById('tips-editor');
+  el.innerHTML = tips.map((t, i) => `
+    <div class="field"><label>Tip ${i+1} título</label><input type="text" id="tip-t-${i}" value="${t.titulo||''}"></div>
+    <div class="field"><label>Tip ${i+1} descripción</label><input type="text" id="tip-d-${i}" value="${t.desc||''}"></div>
+  `).join('');
+}
+
+function buildStatsEditor(stats) {
+  const el = document.getElementById('stats-editor');
+  el.innerHTML = stats.map((s, i) => `
+    <div class="field"><label>Stat ${i+1} número</label><input type="text" id="stat-n-${i}" value="${s.num||''}"></div>
+    <div class="field"><label>Stat ${i+1} texto</label><input type="text" id="stat-l-${i}" value="${s.lbl||''}"></div>
+  `).join('');
+}
+
+// ===== PROPIEDADES =====
+let props = [];
+
+function renderProps() {
+  const el = document.getElementById('prop-list');
+  el.innerHTML = props.map((p, i) => `
+    <div class="prop-item">
+      <div class="prop-item-head">
+        <div class="prop-item-title">${p.titulo || 'Nueva propiedad'}</div>
+        <button class="prop-remove" onclick="removeProp(${i})">Eliminar</button>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label>Título</label><input type="text" value="${p.titulo||''}" oninput="props[${i}].titulo=this.value;document.querySelectorAll('.prop-item-title')[${i}].textContent=this.value||'Nueva propiedad'"></div>
+        <div class="field"><label>País</label>
+          <select onchange="props[${i}].pais=this.value">
+            ${['Chile','Miami','México','Paraguay'].map(c=>`<option${p.pais===c?' selected':''}>${c}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field"><label>Precio</label><input type="text" value="${p.precio||''}" oninput="props[${i}].precio=this.value"></div>
+        <div class="field"><label>Tipo</label><input type="text" value="${p.tipo||''}" oninput="props[${i}].tipo=this.value"></div>
+        <div class="field"><label>Superficie m²</label><input type="text" value="${p.m2||''}" oninput="props[${i}].m2=this.value"></div>
+        <div class="field"><label>Badge</label><input type="text" value="${p.badge||''}" oninput="props[${i}].badge=this.value"></div>
+        <div class="field" style="grid-column:1/-1"><label>Descripción</label><textarea oninput="props[${i}].desc=this.value">${p.desc||''}</textarea></div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('d-props').textContent = props.length;
+}
+
+window.addProp = function() {
+  props.push({titulo:'Nueva propiedad', pais:'Chile', precio:'', tipo:'Departamento', m2:'', desc:'', badge:'Disponible', orden: props.length});
+  renderProps();
+};
+
+window.removeProp = function(i) {
+  if (confirm('¿Eliminar esta propiedad?')) { props.splice(i,1); renderProps(); }
+};
+
+// ===== INIT ADMIN =====
+async function initAdmin() {
+  // Cargar contenido
+  const snap = await getDoc(doc(db, "sitio", "contenido"));
+  const d = snap.exists() ? snap.data() : {};
+
+  const set = (id, val) => { if (document.getElementById(id)) document.getElementById(id).value = val || ''; };
+  set('c-logo', d.logo || 'RABBITTSCAPITAL');
+  set('c-nav1', d.nav1 || 'Inicio'); set('c-nav2', d.nav2 || 'Información');
+  set('c-nav3', d.nav3 || 'Nosotros'); set('c-nav4', d.nav4 || 'Propiedades'); set('c-nav5', d.nav5 || 'Contacto');
+  set('c-hero-title', d.heroTitle || 'Inversiones inmobiliarias que <em>transforman tu futuro</em>');
+  set('c-hero-sub', d.heroSub || ''); set('c-hero-btn1', d.heroBtn1 || 'Ver Propiedades'); set('c-hero-btn2', d.heroBtn2 || 'Contáctanos');
+  set('c-info-title', d.infoTitle || ''); set('c-info-desc', d.infoDesc || '');
+  set('c-nos-title', d.nosTitle || ''); set('c-nos-p1', d.nosP1 || ''); set('c-nos-p2', d.nosP2 || '');
+  set('c-nos-mision', d.nosMision || ''); set('c-nos-vision', d.nosVision || ''); set('c-nos-valores', d.nosValores || '');
+  set('c-cont-title', d.contTitle || ''); set('c-cont-sub', d.contSub || '');
+  set('c-cont-email', d.contEmail || ''); set('c-cont-phone', d.contPhone || '');
+  set('c-cont-addr', d.contAddr || ''); set('c-cont-wa', d.contWa || ''); set('c-cont-btn', d.contBtn || 'Enviar mensaje');
+  set('c-footer-text', d.footerText || ''); set('c-footer-ig', d.footerIg || ''); set('c-footer-wa', d.footerWa || '');
+
+  buildTipsEditor(d.tips || defaultTips);
+  buildStatsEditor(d.stats || defaultStats);
+
+  // Colores
+  currentColors = d.colores || {};
+  buildColorPanels();
+
+  // Propiedades
+  onSnapshot(query(collection(db, "propiedades"), orderBy("orden")), snap => {
+    props = snap.docs.map(d => ({_id: d.id, ...d.data()}));
+    renderProps();
+  });
+
+  // Mensajes
+  onSnapshot(query(collection(db, "contactos"), orderBy("fecha", "desc")), snap => {
+    const msgs = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    document.getElementById('d-msgs').textContent = msgs.length;
+    const badge = document.getElementById('msg-badge');
+    if (msgs.length > 0) { badge.style.display = 'inline'; badge.textContent = msgs.length; }
+    renderMsgs(msgs);
+  });
+}
+
+function renderMsgs(msgs) {
+  const el = document.getElementById('msgs-list');
+  if (!msgs.length) { el.innerHTML = '<div class="no-msgs">No hay mensajes aún.</div>'; return; }
+  el.innerHTML = msgs.map(m => `
+    <div class="msg-item">
+      <div class="msg-head">
+        <div class="msg-nombre">${m.nombre || 'Sin nombre'}</div>
+        <div class="msg-fecha">${m.fecha ? new Date(m.fecha.seconds*1000).toLocaleDateString('es-CL',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : 'Sin fecha'}</div>
+      </div>
+      ${m.pais ? `<div class="msg-pais">${m.pais}</div>` : ''}
+      <div class="msg-email">✉️ ${m.email || ''} ${m.tel ? '· 📞 '+m.tel : ''}</div>
+      ${m.mensaje ? `<div class="msg-text">${m.mensaje}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// ===== GUARDAR =====
+window.saveContenido = async function(btn) {
+  btn.classList.add('saving'); btn.textContent = 'Guardando...';
+  const g = id => document.getElementById(id)?.value || '';
+  const tips = Array.from({length:4}, (_,i) => ({titulo: g(`tip-t-${i}`), desc: g(`tip-d-${i}`)}));
+  const stats = Array.from({length:4}, (_,i) => ({num: g(`stat-n-${i}`), lbl: g(`stat-l-${i}`)}));
+  try {
+    await setDoc(doc(db, "sitio", "contenido"), {
+      logo: g('c-logo'), nav1: g('c-nav1'), nav2: g('c-nav2'), nav3: g('c-nav3'), nav4: g('c-nav4'), nav5: g('c-nav5'),
+      heroTitle: g('c-hero-title'), heroSub: g('c-hero-sub'), heroBtn1: g('c-hero-btn1'), heroBtn2: g('c-hero-btn2'),
+      infoTitle: g('c-info-title'), infoDesc: g('c-info-desc'), tips, stats,
+      nosTitle: g('c-nos-title'), nosP1: g('c-nos-p1'), nosP2: g('c-nos-p2'),
+      nosMision: g('c-nos-mision'), nosVision: g('c-nos-vision'), nosValores: g('c-nos-valores'),
+      contTitle: g('c-cont-title'), contSub: g('c-cont-sub'), contEmail: g('c-cont-email'),
+      contPhone: g('c-cont-phone'), contAddr: g('c-cont-addr'), contWa: g('c-cont-wa'), contBtn: g('c-cont-btn'),
+      footerText: g('c-footer-text'), footerIg: g('c-footer-ig'), footerWa: g('c-footer-wa'),
+      colores: currentColors,
+    }, {merge: true});
+    showStatus('status-contenido');
+  } catch(e) { alert('Error al guardar: ' + e.message); }
+  btn.classList.remove('saving'); btn.textContent = '💾 Guardar todos los cambios';
+};
+
+window.saveColores = async function(btn) {
+  btn.classList.add('saving'); btn.textContent = 'Guardando...';
+  try {
+    await setDoc(doc(db, "sitio", "contenido"), { colores: currentColors }, {merge: true});
+    showStatus('status-colores');
+  } catch(e) { alert('Error: ' + e.message); }
+  btn.classList.remove('saving'); btn.textContent = '💾 Guardar colores';
+};
+
+window.saveProps = async function(btn) {
+  btn.classList.add('saving'); btn.textContent = 'Guardando...';
+  try {
+    for (let i = 0; i < props.length; i++) {
+      const p = {...props[i], orden: i};
+      const id = p._id;
+      delete p._id;
+      if (id) {
+        await setDoc(doc(db, "propiedades", id), p);
+      } else {
+        const ref = await addDoc(collection(db, "propiedades"), p);
+        props[i]._id = ref.id;
+      }
+    }
+    showStatus('status-props');
+  } catch(e) { alert('Error: ' + e.message); }
+  btn.classList.remove('saving'); btn.textContent = '💾 Guardar propiedades';
+};
+
+function showStatus(id) {
+  const el = document.getElementById(id);
+  el.style.display = 'inline';
+  setTimeout(() => el.style.display = 'none', 3000);
+}
+</script>
+</body>
+</html>

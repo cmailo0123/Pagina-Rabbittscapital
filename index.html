@@ -3,359 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rabbittscapital — Page Builder</title>
+<title>Rabbittscapital</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --nav-bg:#0a0a0a;--nav-text:#ffffff;--nav-accent:#c9a84c;
-  --hero-bg:#111111;--hero-text:#ffffff;--hero-sub:#c9a84c;--hero-btn-bg:#c9a84c;--hero-btn-text:#0a0a0a;
+  --nav-bg:#0a0a0a;--nav-text:#fff;--nav-accent:#c9a84c;
+  --hero-bg:#111;--hero-text:#fff;--hero-sub:#c9a84c;--hero-btn-bg:#c9a84c;--hero-btn-text:#0a0a0a;
   --info-bg:#f5f0e8;--info-text:#1a1a1a;--info-accent:#c9a84c;
-  --tips-bg:#1a1a1a;--tips-text:#ffffff;--tips-accent:#c9a84c;
-  --nosotros-bg:#ffffff;--nosotros-text:#1a1a1a;--nosotros-accent:#c9a84c;
-  --props-bg:#f5f0e8;--props-text:#1a1a1a;--props-accent:#c9a84c;--card-bg:#ffffff;
-  --contact-bg:#0a0a0a;--contact-text:#ffffff;--contact-accent:#c9a84c;--contact-btn-bg:#c9a84c;--contact-btn-text:#0a0a0a;
-  --font-heading:'Cormorant Garamond',serif;
-  --font-body:'DM Sans',sans-serif;
+  --tips-bg:#1a1a1a;--tips-text:#fff;--tips-accent:#c9a84c;
+  --nos-bg:#fff;--nos-text:#1a1a1a;--nos-accent:#c9a84c;
+  --props-bg:#f5f0e8;--props-text:#1a1a1a;--props-accent:#c9a84c;--card-bg:#fff;
+  --cont-bg:#0a0a0a;--cont-text:#fff;--cont-accent:#c9a84c;--cont-btn-bg:#c9a84c;--cont-btn-text:#0a0a0a;
 }
-body{font-family:var(--font-body);overflow:hidden}
-
-/* ====== LAYOUT ====== */
-#app{display:flex;height:100vh;width:100vw}
-#sidebar{width:320px;min-width:260px;background:#18181b;color:#fff;display:flex;flex-direction:column;overflow:hidden;transition:width 0.3s;z-index:100;flex-shrink:0}
-#sidebar.collapsed{width:0;min-width:0}
-#preview-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden}
-
-/* ====== SIDEBAR ====== */
-#sb-header{padding:16px;border-bottom:1px solid #2d2d2d;display:flex;align-items:center;gap:10px}
-#sb-header h2{font-size:14px;font-weight:500;letter-spacing:0.5px;flex:1}
-#sb-logo-badge{width:28px;height:28px;background:#c9a84c;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#000}
-#sb-tabs{display:flex;border-bottom:1px solid #2d2d2d}
-.sb-tab{flex:1;padding:10px 6px;text-align:center;font-size:11px;cursor:pointer;color:#888;border-bottom:2px solid transparent;transition:all 0.2s;font-family:var(--font-body)}
-.sb-tab.active{color:#c9a84c;border-bottom-color:#c9a84c}
-#sb-body{flex:1;overflow-y:auto;padding:12px}
-#sb-body::-webkit-scrollbar{width:4px}
-#sb-body::-webkit-scrollbar-track{background:#111}
-#sb-body::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
-
-/* Panel sections */
-.panel{display:none}
-.panel.active{display:block}
-.panel-section{margin-bottom:16px;border:1px solid #2d2d2d;border-radius:8px;overflow:hidden}
-.panel-section-head{padding:10px 12px;background:#222;font-size:12px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:#ccc}
-.panel-section-head:hover{background:#2a2a2a}
-.panel-section-body{padding:12px;display:none;background:#1a1a1a}
-.panel-section-body.open{display:block}
-.field-group{margin-bottom:10px}
-.field-group label{display:block;font-size:11px;color:#888;margin-bottom:4px}
-.field-group input[type=text],.field-group textarea,.field-group select{
-  width:100%;background:#111;border:1px solid #333;border-radius:6px;padding:7px 10px;color:#fff;font-size:12px;font-family:var(--font-body);outline:none
-}
-.field-group textarea{resize:vertical;min-height:60px;line-height:1.5}
-.field-group input[type=text]:focus,.field-group textarea:focus{border-color:#c9a84c}
-.field-group input[type=color]{width:100%;height:32px;background:#111;border:1px solid #333;border-radius:6px;cursor:pointer;padding:2px}
-
-/* Color grid */
-.color-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.color-item label{font-size:10px;color:#666}
-.color-item input[type=color]{height:28px}
-
-/* Buttons */
-.sb-btn{width:100%;padding:8px;background:#c9a84c;color:#000;border:none;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font-body);transition:opacity 0.2s}
-.sb-btn:hover{opacity:0.85}
-.sb-btn-ghost{background:transparent;color:#c9a84c;border:1px solid #c9a84c;margin-top:6px}
-
-/* Property cards in editor */
-.prop-card-editor{background:#111;border:1px solid #2d2d2d;border-radius:8px;padding:10px;margin-bottom:8px}
-.prop-card-editor .pce-title{font-size:11px;font-weight:500;color:#c9a84c;margin-bottom:6px}
-.remove-btn{float:right;background:none;border:none;color:#666;cursor:pointer;font-size:14px;padding:0}
-.remove-btn:hover{color:#e55}
-
-/* ====== TOPBAR ====== */
-#topbar{background:#0f0f0f;border-bottom:1px solid #222;padding:0 16px;height:48px;display:flex;align-items:center;gap:10px;flex-shrink:0}
-#toggle-sb{background:none;border:1px solid #333;color:#fff;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px}
-#toggle-sb:hover{border-color:#c9a84c;color:#c9a84c}
-.view-btns{display:flex;gap:4px}
-.view-btn{background:none;border:1px solid #2d2d2d;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px;transition:all 0.2s}
-.view-btn.active{border-color:#c9a84c;color:#c9a84c}
-#topbar-title{font-size:13px;color:#aaa;flex:1;text-align:center}
-#save-btn{background:#c9a84c;color:#000;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer}
-#save-btn:hover{opacity:0.85}
-
-/* ====== IFRAME WRAP ====== */
-#iframe-container{flex:1;overflow:auto;background:#2a2a2a;display:flex;align-items:flex-start;justify-content:center;padding:16px}
-iframe#preview{background:#fff;border:none;transition:width 0.3s,height 0.3s;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.5)}
-iframe#preview.desktop{width:100%;height:calc(100vh - 80px)}
-iframe#preview.tablet{width:768px;height:900px}
-iframe#preview.mobile{width:390px;height:844px}
-
-/* ====== WEBSITE CSS (injected into iframe) ====== */
-</style>
-</head>
-<body>
-
-<div id="app">
-  <!-- SIDEBAR -->
-  <div id="sidebar">
-    <div id="sb-header">
-      <div id="sb-logo-badge">RC</div>
-      <h2>Rabbittscapital Editor</h2>
-    </div>
-    <div id="sb-tabs">
-      <div class="sb-tab active" onclick="switchPanel('content')">Contenido</div>
-      <div class="sb-tab" onclick="switchPanel('colors')">Colores</div>
-      <div class="sb-tab" onclick="switchPanel('propiedades')">Propiedades</div>
-    </div>
-    <div id="sb-body">
-
-      <!-- CONTENT PANEL -->
-      <div class="panel active" id="panel-content">
-
-        <div class="panel-section">
-          <div class="panel-section-head" onclick="toggleSection(this)">🏠 Navegación <span>▾</span></div>
-          <div class="panel-section-body open">
-            <div class="field-group"><label>Nombre del logo</label><input type="text" id="c-logo" value="RABBITTSCAPITAL" oninput="sync()"></div>
-            <div class="field-group"><label>Menú ítem 1</label><input type="text" id="c-nav1" value="Inicio" oninput="sync()"></div>
-            <div class="field-group"><label>Menú ítem 2</label><input type="text" id="c-nav2" value="Nosotros" oninput="sync()"></div>
-            <div class="field-group"><label>Menú ítem 3</label><input type="text" id="c-nav3" value="Propiedades" oninput="sync()"></div>
-            <div class="field-group"><label>Menú ítem 4</label><input type="text" id="c-nav4" value="Contacto" oninput="sync()"></div>
-          </div>
-        </div>
-
-        <div class="panel-section">
-          <div class="panel-section-head" onclick="toggleSection(this)">✨ Hero (Inicio) <span>▾</span></div>
-          <div class="panel-section-body open">
-            <div class="field-group"><label>Título principal</label><input type="text" id="c-hero-title" value="Inversiones inmobiliarias que transforman tu futuro" oninput="sync()"></div>
-            <div class="field-group"><label>Subtítulo</label><textarea id="c-hero-sub" oninput="sync()">Propiedades exclusivas en Chile, Miami, México y Paraguay. Tu capital, en los mejores destinos del mundo.</textarea></div>
-            <div class="field-group"><label>Texto del botón</label><input type="text" id="c-hero-btn" value="Ver Propiedades" oninput="sync()"></div>
-            <div class="field-group"><label>Texto botón secundario</label><input type="text" id="c-hero-btn2" value="Contáctanos" oninput="sync()"></div>
-          </div>
-        </div>
-
-        <div class="panel-section">
-          <div class="panel-section-head" onclick="toggleSection(this)">📋 Información del negocio <span>▾</span></div>
-          <div class="panel-section-body">
-            <div class="field-group"><label>Título sección</label><input type="text" id="c-info-title" value="¿Por qué invertir con nosotros?" oninput="sync()"></div>
-            <div class="field-group"><label>Descripción</label><textarea id="c-info-desc" oninput="sync()">Somos especialistas en conectar inversores con las mejores oportunidades inmobiliarias en Latinoamérica y Estados Unidos.</textarea></div>
-            <div class="field-group"><label>Tip 1 título</label><input type="text" id="c-tip1t" value="Mercados Clave" oninput="sync()"></div>
-            <div class="field-group"><label>Tip 1 texto</label><input type="text" id="c-tip1d" value="Presencia en Chile, Miami, México y Paraguay." oninput="sync()"></div>
-            <div class="field-group"><label>Tip 2 título</label><input type="text" id="c-tip2t" value="Rentabilidad" oninput="sync()"></div>
-            <div class="field-group"><label>Tip 2 texto</label><input type="text" id="c-tip2d" value="Retornos superiores al promedio del mercado." oninput="sync()"></div>
-            <div class="field-group"><label>Tip 3 título</label><input type="text" id="c-tip3t" value="Asesoría Integral" oninput="sync()"></div>
-            <div class="field-group"><label>Tip 3 texto</label><input type="text" id="c-tip3d" value="Te acompañamos en cada etapa de tu inversión." oninput="sync()"></div>
-            <div class="field-group"><label>Tip 4 título</label><input type="text" id="c-tip4t" value="Seguridad Jurídica" oninput="sync()"></div>
-            <div class="field-group"><label>Tip 4 texto</label><input type="text" id="c-tip4d" value="Contratos transparentes y respaldo legal total." oninput="sync()"></div>
-          </div>
-        </div>
-
-        <div class="panel-section">
-          <div class="panel-section-head" onclick="toggleSection(this)">👥 Nosotros <span>▾</span></div>
-          <div class="panel-section-body">
-            <div class="field-group"><label>Título</label><input type="text" id="c-nos-title" value="Quiénes somos" oninput="sync()"></div>
-            <div class="field-group"><label>Párrafo 1</label><textarea id="c-nos-p1" oninput="sync()">Rabbittscapital nació con la visión de democratizar el acceso a inversiones inmobiliarias de alto valor en los mercados más dinámicos de América.</textarea></div>
-            <div class="field-group"><label>Párrafo 2</label><textarea id="c-nos-p2" oninput="sync()">Con un equipo de expertos en finanzas, derecho e inmobiliaria, te ofrecemos acceso a oportunidades exclusivas con acompañamiento personalizado.</textarea></div>
-            <div class="field-group"><label>Stat 1 número</label><input type="text" id="c-s1n" value="+500" oninput="sync()"></div>
-            <div class="field-group"><label>Stat 1 texto</label><input type="text" id="c-s1t" value="Clientes activos" oninput="sync()"></div>
-            <div class="field-group"><label>Stat 2 número</label><input type="text" id="c-s2n" value="4" oninput="sync()"></div>
-            <div class="field-group"><label>Stat 2 texto</label><input type="text" id="c-s2t" value="Países de operación" oninput="sync()"></div>
-            <div class="field-group"><label>Stat 3 número</label><input type="text" id="c-s3n" value="+$50M" oninput="sync()"></div>
-            <div class="field-group"><label>Stat 3 texto</label><input type="text" id="c-s3t" value="En activos gestionados" oninput="sync()"></div>
-          </div>
-        </div>
-
-        <div class="panel-section">
-          <div class="panel-section-head" onclick="toggleSection(this)">📬 Contacto <span>▾</span></div>
-          <div class="panel-section-body">
-            <div class="field-group"><label>Título</label><input type="text" id="c-cont-title" value="Hablemos de tu inversión" oninput="sync()"></div>
-            <div class="field-group"><label>Subtítulo</label><input type="text" id="c-cont-sub" value="Nuestros asesores están listos para guiarte." oninput="sync()"></div>
-            <div class="field-group"><label>Email</label><input type="text" id="c-cont-email" value="contacto@rabbittscapital.com" oninput="sync()"></div>
-            <div class="field-group"><label>Teléfono</label><input type="text" id="c-cont-phone" value="+56 9 1234 5678" oninput="sync()"></div>
-            <div class="field-group"><label>Dirección</label><input type="text" id="c-cont-addr" value="Santiago, Chile" oninput="sync()"></div>
-            <div class="field-group"><label>Texto botón</label><input type="text" id="c-cont-btn" value="Enviar mensaje" oninput="sync()"></div>
-          </div>
-        </div>
-
-        <div class="panel-section">
-          <div class="panel-section-head" onclick="toggleSection(this)">🔗 Pie de página <span>▾</span></div>
-          <div class="panel-section-body">
-            <div class="field-group"><label>Texto footer</label><input type="text" id="c-footer" value="© 2025 Rabbittscapital. Todos los derechos reservados." oninput="sync()"></div>
-            <div class="field-group"><label>Instagram</label><input type="text" id="c-ig" value="@rabbittscapital" oninput="sync()"></div>
-            <div class="field-group"><label>WhatsApp</label><input type="text" id="c-wa" value="+56912345678" oninput="sync()"></div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- COLORS PANEL -->
-      <div class="panel" id="panel-colors">
-        <div class="panel-section">
-          <div class="panel-section-head" onclick="toggleSection(this)">🏠 Navegación <span>▾</span></div>
-          <div class="panel-section-body open">
-            <div class="color-grid">
-              <div class="color-item field-group"><label>Fondo nav</label><input type="color" value="#0a0a0a" oninput="setVar('--nav-bg',this.value)"></div>
-              <div class="color-item field-group"><label>Texto nav</label><input type="color" value="#ffffff" oninput="setVar('--nav-text',this.value)"></div>
-              <div class="color-item field-group"><label>Acento nav</label><input type="color" value="#c9a84c" oninput="setVar('--nav-accent',this.value)"></div>
-            </div>
-          </div>
-        </div>
-        <div class="panel-section">
-          <div class="panel-section-head" onclick="toggleSection(this)">✨ Hero <span>▾</span></div>
-          <div class="panel-section-body open">
-            <div class="color-grid">
-              <div class="color-item field-group"><label>Fondo</label><input type="color" value="#111111" oninput="setVar('--hero-bg',this.value)"></div>
-              <div class="color-item field-group"><label>Título</label><input type="color" value="#ffffff" oninput="setVar('--hero-text',this.value)"></div>
-              <div class="color-item field-group"><label>Subtítulo</label><input type="color" value="#c9a84c" oninput="setVar('--hero-sub',this.value)"></div>
-              <div class="color-item field-group"><label>Botón fondo</label><input type="color" value="#c9a84c" oninput="setVar('--hero-btn-bg',this.value)"></div>
-              <div class="color-item field-group"><label>Botón texto</label><input type="color" value="#0a0a0a" oninput="setVar('--hero-btn-text',this.value)"></div>
-            </div>
-          </div>
-        </div>
-        <div class="panel-section">
-          <div class="panel-section-head" onclick="toggleSection(this)">📋 Info del negocio <span>▾</span></div>
-          <div class="panel-section-body">
-            <div class="color-grid">
-              <div class="color-item field-group"><label>Fondo</label><input type="color" value="#f5f0e8" oninput="setVar('--info-bg',this.value)"></div>
-              <div class="color-item field-group"><label>Texto</label><input type="color" value="#1a1a1a" oninput="setVar('--info-text',this.value)"></div>
-              <div class="color-item field-group"><label>Acento</label><input type="color" value="#c9a84c" oninput="setVar('--info-accent',this.value)"></div>
-            </div>
-          </div>
-        </div>
-        <div class="panel-section">
-          <div class="panel-section-head" onclick="toggleSection(this)">💡 Tips <span>▾</span></div>
-          <div class="panel-section-body">
-            <div class="color-grid">
-              <div class="color-item field-group"><label>Fondo</label><input type="color" value="#1a1a1a" oninput="setVar('--tips-bg',this.value)"></div>
-              <div class="color-item field-group"><label>Texto</label><input type="color" value="#ffffff" oninput="setVar('--tips-text',this.value)"></div>
-              <div class="color-item field-group"><label>Acento</label><input type="color" value="#c9a84c" oninput="setVar('--tips-accent',this.value)"></div>
-            </div>
-          </div>
-        </div>
-        <div class="panel-section">
-          <div class="panel-section-head" onclick="toggleSection(this)">👥 Nosotros <span>▾</span></div>
-          <div class="panel-section-body">
-            <div class="color-grid">
-              <div class="color-item field-group"><label>Fondo</label><input type="color" value="#ffffff" oninput="setVar('--nosotros-bg',this.value)"></div>
-              <div class="color-item field-group"><label>Texto</label><input type="color" value="#1a1a1a" oninput="setVar('--nosotros-text',this.value)"></div>
-              <div class="color-item field-group"><label>Acento</label><input type="color" value="#c9a84c" oninput="setVar('--nosotros-accent',this.value)"></div>
-            </div>
-          </div>
-        </div>
-        <div class="panel-section">
-          <div class="panel-section-head" onclick="toggleSection(this)">🏢 Propiedades <span>▾</span></div>
-          <div class="panel-section-body">
-            <div class="color-grid">
-              <div class="color-item field-group"><label>Fondo</label><input type="color" value="#f5f0e8" oninput="setVar('--props-bg',this.value)"></div>
-              <div class="color-item field-group"><label>Texto</label><input type="color" value="#1a1a1a" oninput="setVar('--props-text',this.value)"></div>
-              <div class="color-item field-group"><label>Acento</label><input type="color" value="#c9a84c" oninput="setVar('--props-accent',this.value)"></div>
-              <div class="color-item field-group"><label>Tarjeta</label><input type="color" value="#ffffff" oninput="setVar('--card-bg',this.value)"></div>
-            </div>
-          </div>
-        </div>
-        <div class="panel-section">
-          <div class="panel-section-head" onclick="toggleSection(this)">📬 Contacto <span>▾</span></div>
-          <div class="panel-section-body">
-            <div class="color-grid">
-              <div class="color-item field-group"><label>Fondo</label><input type="color" value="#0a0a0a" oninput="setVar('--contact-bg',this.value)"></div>
-              <div class="color-item field-group"><label>Texto</label><input type="color" value="#ffffff" oninput="setVar('--contact-text',this.value)"></div>
-              <div class="color-item field-group"><label>Acento</label><input type="color" value="#c9a84c" oninput="setVar('--contact-accent',this.value)"></div>
-              <div class="color-item field-group"><label>Botón fondo</label><input type="color" value="#c9a84c" oninput="setVar('--contact-btn-bg',this.value)"></div>
-              <div class="color-item field-group"><label>Botón texto</label><input type="color" value="#0a0a0a" oninput="setVar('--contact-btn-text',this.value)"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PROPIEDADES PANEL -->
-      <div class="panel" id="panel-propiedades">
-        <p style="font-size:12px;color:#888;margin-bottom:12px">Agrega y edita las propiedades que aparecen en el sitio.</p>
-        <div id="props-list"></div>
-        <button class="sb-btn" onclick="addProp()">+ Agregar propiedad</button>
-      </div>
-
-    </div><!-- sb-body -->
-  </div><!-- sidebar -->
-
-  <!-- PREVIEW -->
-  <div id="preview-wrap">
-    <div id="topbar">
-      <button id="toggle-sb" onclick="toggleSidebar()">☰ Panel</button>
-      <div class="view-btns">
-        <button class="view-btn active" onclick="setView('desktop',this)">🖥 Desktop</button>
-        <button class="view-btn" onclick="setView('tablet',this)">📱 Tablet</button>
-        <button class="view-btn" onclick="setView('mobile',this)">📲 Móvil</button>
-      </div>
-      <div id="topbar-title">rabbittscapital.com — Vista previa en vivo</div>
-      <button id="save-btn" onclick="exportSite()">⬇ Exportar sitio</button>
-    </div>
-    <div id="iframe-container">
-      <iframe id="preview" class="desktop"></iframe>
-    </div>
-  </div>
-</div>
-
-<script>
-// ===== DATA =====
-let props = [
-  {id:1, titulo:"Departamento Vitacura", pais:"Chile", precio:"UF 4.500", tipo:"Departamento", m2:"85", desc:"Moderno departamento de 3 dormitorios con vista panorámica.", badge:"Disponible"},
-  {id:2, titulo:"Penthouse Brickell", pais:"Miami", precio:"USD 850,000", tipo:"Penthouse", m2:"140", desc:"Penthouse de lujo en el corazón financiero de Miami.", badge:"Oportunidad"},
-  {id:3, titulo:"Residencia Polanco", pais:"México", precio:"MXN 6,500,000", tipo:"Casa", m2:"220", desc:"Residencia exclusiva en la zona más cotizada de CDMX.", badge:"Nuevo"},
-  {id:4, titulo:"Apartamento Asunción", pais:"Paraguay", precio:"USD 95,000", tipo:"Departamento", m2:"68", desc:"Ideal para renta. Excelente rentabilidad anual proyectada.", badge:"Disponible"},
-];
-let nextId = 5;
-
-// ===== WEBSITE HTML =====
-function buildSite(){
-  const v = getVals();
-  const propsHTML = props.map(p=>`
-    <div style="background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,0.08)">
-      <div style="background:linear-gradient(135deg,#1a1a1a 60%,#2d2d2d);height:160px;display:flex;align-items:center;justify-content:center;position:relative">
-        <span style="font-size:48px">🏢</span>
-        <span style="position:absolute;top:12px;right:12px;background:var(--props-accent);color:#000;font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px">${p.badge}</span>
-      </div>
-      <div style="padding:20px">
-        <div style="font-size:10px;color:var(--props-accent);font-weight:600;letter-spacing:1px;margin-bottom:4px">${p.pais.toUpperCase()} · ${p.tipo}</div>
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--props-text);margin-bottom:8px">${p.titulo}</h3>
-        <p style="font-size:13px;color:#666;line-height:1.5;margin-bottom:12px">${p.desc}</p>
-        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;padding-top:12px">
-          <div>
-            <div style="font-size:11px;color:#999">Precio</div>
-            <div style="font-size:16px;font-weight:600;color:var(--props-text)">${p.precio}</div>
-          </div>
-          <div style="text-align:right">
-            <div style="font-size:11px;color:#999">Superficie</div>
-            <div style="font-size:16px;font-weight:600;color:var(--props-text)">${p.m2} m²</div>
-          </div>
-        </div>
-        <button style="width:100%;margin-top:14px;padding:10px;background:var(--props-accent);color:#000;border:none;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer">Ver detalle →</button>
-      </div>
-    </div>
-  `).join('');
-
-  const cssVars = getCSSVars();
-
-  return `<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${v.logo}</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-:root{${cssVars}}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;color:var(--nosotros-text)}
+body{font-family:'DM Sans',sans-serif;color:#1a1a1a}
 html{scroll-behavior:smooth}
 a{text-decoration:none}
 
-/* NAV */
+/* Loading */
+#loading{position:fixed;inset:0;background:#0a0a0a;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.5s}
+#loading.hide{opacity:0;pointer-events:none}
+.loader-logo{font-family:'Cormorant Garamond',serif;font-size:28px;letter-spacing:4px;color:#c9a84c;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
 nav{background:var(--nav-bg);position:sticky;top:0;z-index:999;padding:0 5%}
 .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;height:68px;justify-content:space-between}
 .nav-logo{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:2px;color:var(--nav-accent);font-weight:600}
 .nav-links{display:flex;gap:32px;list-style:none}
-.nav-links a{color:var(--nav-text);font-size:13px;letter-spacing:0.5px;opacity:0.8;transition:opacity 0.2s}
+.nav-links a{color:var(--nav-text);font-size:13px;letter-spacing:0.5px;opacity:0.8;transition:all 0.2s}
 .nav-links a:hover{opacity:1;color:var(--nav-accent)}
-.nav-cta{background:var(--nav-accent);color:#000;padding:9px 20px;border-radius:6px;font-size:12px;font-weight:600;letter-spacing:0.5px}
-.nav-cta:hover{opacity:0.9}
+.nav-cta{background:var(--nav-accent);color:#000!important;padding:9px 20px;border-radius:6px;font-size:12px;font-weight:600;opacity:1!important}
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
 .hamburger span{width:22px;height:2px;background:var(--nav-text);border-radius:2px;display:block}
 #mobile-menu{display:none;background:var(--nav-bg);padding:16px 5%}
@@ -370,23 +47,22 @@ nav{background:var(--nav-bg);position:sticky;top:0;z-index:999;padding:0 5%}
 .hero-inner h1 em{font-style:normal;color:var(--hero-sub)}
 .hero-inner p{font-size:15px;line-height:1.7;color:rgba(255,255,255,0.65);margin-bottom:32px;max-width:480px}
 .hero-btns{display:flex;gap:12px;flex-wrap:wrap}
-.btn-primary{background:var(--hero-btn-bg);color:var(--hero-btn-text);padding:14px 28px;border-radius:8px;font-weight:600;font-size:14px;letter-spacing:0.3px;border:none;cursor:pointer;transition:opacity 0.2s}
+.btn-primary{background:var(--hero-btn-bg);color:var(--hero-btn-text);padding:14px 28px;border-radius:8px;font-weight:600;font-size:14px;border:none;cursor:pointer;transition:opacity 0.2s}
 .btn-primary:hover{opacity:0.88}
 .btn-ghost{background:transparent;color:var(--hero-text);border:1px solid rgba(255,255,255,0.3);padding:14px 28px;border-radius:8px;font-size:14px;cursor:pointer;transition:all 0.2s}
 .btn-ghost:hover{border-color:var(--hero-sub);color:var(--hero-sub)}
 .hero-visual{display:flex;flex-direction:column;gap:12px}
-.hero-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:20px 24px;backdrop-filter:blur(10px)}
+.hero-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:20px 24px}
 .hero-card-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--hero-sub);margin-bottom:6px}
 .hero-card-val{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--hero-text)}
 .hero-card-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px}
 .countries{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .country-pill{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--hero-text)}
-.country-pill span{color:var(--hero-sub);font-weight:600}
 
-/* SECTION BASE */
+/* SECCIONES */
 .section{padding:80px 5%}
 .section-inner{max-width:1200px;margin:0 auto}
-.section-tag{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--info-accent);margin-bottom:12px}
+.section-tag{font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
 .section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,44px);font-weight:300;line-height:1.2;margin-bottom:20px}
 
 /* INFO */
@@ -405,18 +81,18 @@ nav{background:var(--nav-bg);position:sticky;top:0;z-index:999;padding:0 5%}
 .stat-lbl{font-size:12px;color:var(--info-text);opacity:0.6;margin-top:4px}
 
 /* NOSOTROS */
-#nosotros{background:var(--nosotros-bg)}
-#nosotros .section-tag{color:var(--nosotros-accent)}
-#nosotros .section-title{color:var(--nosotros-text)}
+#nosotros{background:var(--nos-bg)}
+#nosotros .section-tag{color:var(--nos-accent)}
+#nosotros .section-title{color:var(--nos-text)}
 .nos-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.nos-text p{font-size:15px;line-height:1.8;color:var(--nosotros-text);opacity:0.7;margin-bottom:16px}
+.nos-text p{font-size:15px;line-height:1.8;color:var(--nos-text);opacity:0.7;margin-bottom:16px}
 .nos-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
-.nos-stat{text-align:center;padding:24px 12px;background:var(--nosotros-bg);border:1px solid rgba(0,0,0,0.08);border-radius:12px}
-.nos-stat-n{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:400;color:var(--nosotros-accent)}
-.nos-stat-t{font-size:11px;color:var(--nosotros-text);opacity:0.55;margin-top:4px}
+.nos-stat{text-align:center;padding:24px 12px;border:1px solid rgba(0,0,0,0.08);border-radius:12px}
+.nos-stat-n{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--nos-accent)}
+.nos-stat-t{font-size:11px;color:var(--nos-text);opacity:0.55;margin-top:4px}
 .nos-visual{background:linear-gradient(135deg,#1a1a1a,#2d2d2d);border-radius:16px;padding:40px;color:#fff;display:flex;flex-direction:column;gap:20px}
-.mission-block{border-left:3px solid var(--nosotros-accent);padding-left:16px}
-.mission-block h4{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--nosotros-accent);margin-bottom:6px}
+.mission-block{border-left:3px solid var(--nos-accent);padding-left:16px}
+.mission-block h4{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--nos-accent);margin-bottom:6px}
 .mission-block p{font-size:14px;line-height:1.6;opacity:0.7}
 
 /* PROPIEDADES */
@@ -425,30 +101,41 @@ nav{background:var(--nav-bg);position:sticky;top:0;z-index:999;padding:0 5%}
 #propiedades .section-title{color:var(--props-text)}
 .props-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:16px}
 .filter-tabs{display:flex;gap:8px;flex-wrap:wrap}
-.ftab{padding:7px 16px;border-radius:20px;border:1px solid var(--props-accent);font-size:12px;cursor:pointer;background:transparent;color:var(--props-text);transition:all 0.2s}
+.ftab{padding:7px 16px;border-radius:20px;border:1px solid var(--props-accent);font-size:12px;cursor:pointer;background:transparent;color:var(--props-text);transition:all 0.2s;font-family:'DM Sans',sans-serif}
 .ftab.active,.ftab:hover{background:var(--props-accent);color:#000;font-weight:600}
 .props-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
+.prop-card{background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,0.08);transition:transform 0.2s}
+.prop-card:hover{transform:translateY(-4px)}
+.prop-img{background:linear-gradient(135deg,#1a1a1a 60%,#2d2d2d);height:160px;display:flex;align-items:center;justify-content:center;position:relative;font-size:48px}
+.prop-badge{position:absolute;top:12px;right:12px;background:var(--props-accent);color:#000;font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px}
+.prop-body{padding:20px}
+.prop-pais{font-size:10px;color:var(--props-accent);font-weight:600;letter-spacing:1px;margin-bottom:4px}
+.prop-titulo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--props-text);margin-bottom:8px}
+.prop-desc{font-size:13px;color:#666;line-height:1.5;margin-bottom:12px}
+.prop-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;padding-top:12px}
+.prop-precio-lbl,.prop-m2-lbl{font-size:11px;color:#999}
+.prop-precio-val,.prop-m2-val{font-size:16px;font-weight:600;color:var(--props-text)}
+.prop-btn{width:100%;margin-top:14px;padding:10px;background:var(--props-accent);color:#000;border:none;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
 
 /* CONTACTO */
-#contacto{background:var(--contact-bg)}
-#contacto .section-tag{color:var(--contact-accent)}
-#contacto .section-title{color:var(--contact-text)}
+#contacto{background:var(--cont-bg)}
+#contacto .section-tag{color:var(--cont-accent)}
+#contacto .section-title{color:var(--cont-text)}
 .cont-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
-.cont-info p{font-size:15px;color:var(--contact-text);opacity:0.6;line-height:1.7;margin-bottom:32px}
+.cont-info p{font-size:15px;color:var(--cont-text);opacity:0.6;line-height:1.7;margin-bottom:32px}
 .cont-detail{display:flex;flex-direction:column;gap:16px}
 .cont-item{display:flex;gap:14px;align-items:center}
 .cont-icon{width:40px;height:40px;border-radius:8px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.cont-item-text div:first-child{font-size:11px;color:var(--contact-accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
-.cont-item-text div:last-child{font-size:14px;color:var(--contact-text)}
+.cont-item-label{font-size:11px;color:var(--cont-accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+.cont-item-val{font-size:14px;color:var(--cont-text)}
 .cont-form{display:flex;flex-direction:column;gap:14px}
-.cont-form input,.cont-form textarea,.cont-form select{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:13px 16px;color:var(--contact-text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s}
-.cont-form input:focus,.cont-form textarea:focus{border-color:var(--contact-accent)}
+.cont-form input,.cont-form textarea,.cont-form select{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:13px 16px;color:var(--cont-text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s}
+.cont-form input:focus,.cont-form textarea:focus{border-color:var(--cont-accent)}
 .cont-form textarea{min-height:100px;resize:vertical}
-.cont-form button{background:var(--contact-btn-bg);color:var(--contact-btn-text);padding:14px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:0.3px;transition:opacity 0.2s}
+.cont-form button{background:var(--cont-btn-bg);color:var(--cont-btn-text);padding:14px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
 .cont-form button:hover{opacity:0.88}
 
-/* FOOTER */
-footer{background:#050505;padding:24px 5%;text-align:center;border-top:1px solid #1a1a1a}
+footer{background:#050505;padding:24px 5%;border-top:1px solid #1a1a1a}
 .footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 .footer-logo{font-family:'Cormorant Garamond',serif;font-size:16px;letter-spacing:2px;color:var(--nav-accent)}
 footer p{font-size:12px;color:#555}
@@ -456,18 +143,15 @@ footer p{font-size:12px;color:#555}
 .footer-links a{font-size:12px;color:#555;transition:color 0.2s}
 .footer-links a:hover{color:var(--nav-accent)}
 
-/* RESPONSIVE */
 @media(max-width:900px){
   .hero-inner,.info-grid,.nos-grid,.cont-grid{grid-template-columns:1fr}
   .hero-visual{display:grid;grid-template-columns:1fr 1fr}
   .nos-visual{display:none}
-  .info-stats{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:640px){
   .nav-links,.nav-cta{display:none}
   .hamburger{display:flex}
   .hero-visual{grid-template-columns:1fr}
-  .countries{grid-template-columns:1fr 1fr}
   .tips-grid{grid-template-columns:1fr}
   .nos-stats{grid-template-columns:1fr 1fr}
   .footer-inner{flex-direction:column;text-align:center}
@@ -476,24 +160,28 @@ footer p{font-size:12px;color:#555}
 </head>
 <body>
 
+<div id="loading"><div class="loader-logo">RABBITTSCAPITAL</div></div>
+
 <nav>
   <div class="nav-inner">
-    <div class="nav-logo">${v.logo}</div>
+    <div class="nav-logo" id="nav-logo">RABBITTSCAPITAL</div>
     <ul class="nav-links">
-      <li><a href="#inicio">${v.nav1}</a></li>
-      <li><a href="#informacion">${v.nav2}</a></li>
-      <li><a href="#nosotros">Nosotros</a></li>
-      <li><a href="#propiedades">${v.nav3}</a></li>
-      <li><a href="#contacto" class="nav-cta">${v.nav4}</a></li>
+      <li><a href="#inicio" id="nav1">Inicio</a></li>
+      <li><a href="#informacion" id="nav2">Información</a></li>
+      <li><a href="#nosotros" id="nav3">Nosotros</a></li>
+      <li><a href="#propiedades" id="nav4">Propiedades</a></li>
+      <li><a href="#contacto" class="nav-cta" id="nav5">Contacto</a></li>
     </ul>
-    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+    <button class="hamburger" onclick="document.getElementById('mobile-menu').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
   </div>
   <div id="mobile-menu">
-    <a href="#inicio">${v.nav1}</a>
-    <a href="#informacion">${v.nav2}</a>
+    <a href="#inicio">Inicio</a>
+    <a href="#informacion">Información</a>
     <a href="#nosotros">Nosotros</a>
-    <a href="#propiedades">${v.nav3}</a>
-    <a href="#contacto">${v.nav4}</a>
+    <a href="#propiedades">Propiedades</a>
+    <a href="#contacto">Contacto</a>
   </div>
 </nav>
 
@@ -501,11 +189,11 @@ footer p{font-size:12px;color:#555}
   <div class="hero-inner">
     <div>
       <div class="hero-tag">Inversión Inmobiliaria Premium</div>
-      <h1>${v.heroTitle.replace(/([^.!?]+[.!?])/,'<em>$1</em>').replace(/<em>/,'<em>').replace(/<\/em>/,'</em>')}</h1>
-      <p>${v.heroSub}</p>
+      <h1 id="hero-title">Inversiones inmobiliarias que <em>transforman tu futuro</em></h1>
+      <p id="hero-sub">Propiedades exclusivas en Chile, Miami, México y Paraguay. Tu capital, en los mejores destinos del mundo.</p>
       <div class="hero-btns">
-        <button class="btn-primary" onclick="document.getElementById('propiedades').scrollIntoView({behavior:'smooth'})">${v.heroBtn}</button>
-        <button class="btn-ghost" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">${v.heroBtn2}</button>
+        <button class="btn-primary" id="hero-btn1" onclick="document.getElementById('propiedades').scrollIntoView({behavior:'smooth'})">Ver Propiedades</button>
+        <button class="btn-ghost" id="hero-btn2" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">Contáctanos</button>
       </div>
     </div>
     <div class="hero-visual">
@@ -515,14 +203,14 @@ footer p{font-size:12px;color:#555}
         <div class="hero-card-sub">Chile · Miami · México · Paraguay</div>
       </div>
       <div class="countries">
-        <div class="country-pill"><span>🇨🇱</span> Chile</div>
-        <div class="country-pill"><span>🇺🇸</span> Miami</div>
-        <div class="country-pill"><span>🇲🇽</span> México</div>
-        <div class="country-pill"><span>🇵🇾</span> Paraguay</div>
+        <div class="country-pill">🇨🇱 Chile</div>
+        <div class="country-pill">🇺🇸 Miami</div>
+        <div class="country-pill">🇲🇽 México</div>
+        <div class="country-pill">🇵🇾 Paraguay</div>
       </div>
       <div class="hero-card">
         <div class="hero-card-label">Activos gestionados</div>
-        <div class="hero-card-val">+$50M USD</div>
+        <div class="hero-card-val" id="hero-stat-val">+$50M USD</div>
         <div class="hero-card-sub">En portafolio inmobiliario activo</div>
       </div>
     </div>
@@ -534,19 +222,19 @@ footer p{font-size:12px;color:#555}
     <div class="info-grid">
       <div>
         <div class="section-tag">Información</div>
-        <h2 class="section-title">${v.infoTitle}</h2>
-        <p class="info-desc">${v.infoDesc}</p>
-        <div class="tips-grid">
-          <div class="tip-item"><div class="tip-title">${v.tip1t}</div><div class="tip-desc">${v.tip1d}</div></div>
-          <div class="tip-item"><div class="tip-title">${v.tip2t}</div><div class="tip-desc">${v.tip2d}</div></div>
-          <div class="tip-item"><div class="tip-title">${v.tip3t}</div><div class="tip-desc">${v.tip3d}</div></div>
-          <div class="tip-item"><div class="tip-title">${v.tip4t}</div><div class="tip-desc">${v.tip4d}</div></div>
+        <h2 class="section-title" id="info-title">¿Por qué invertir con nosotros?</h2>
+        <p class="info-desc" id="info-desc">Somos especialistas en conectar inversores con las mejores oportunidades inmobiliarias en Latinoamérica y Estados Unidos.</p>
+        <div class="tips-grid" id="tips-grid">
+          <div class="tip-item"><div class="tip-title">Mercados Clave</div><div class="tip-desc">Presencia en Chile, Miami, México y Paraguay.</div></div>
+          <div class="tip-item"><div class="tip-title">Rentabilidad</div><div class="tip-desc">Retornos superiores al promedio del mercado.</div></div>
+          <div class="tip-item"><div class="tip-title">Asesoría Integral</div><div class="tip-desc">Te acompañamos en cada etapa de tu inversión.</div></div>
+          <div class="tip-item"><div class="tip-title">Seguridad Jurídica</div><div class="tip-desc">Contratos transparentes y respaldo legal total.</div></div>
         </div>
       </div>
-      <div class="info-stats">
-        <div class="stat-box"><div class="stat-num">${v.s1n}</div><div class="stat-lbl">${v.s1t}</div></div>
-        <div class="stat-box"><div class="stat-num">${v.s2n}</div><div class="stat-lbl">${v.s2t}</div></div>
-        <div class="stat-box"><div class="stat-num">${v.s3n}</div><div class="stat-lbl">${v.s3t}</div></div>
+      <div class="info-stats" id="info-stats">
+        <div class="stat-box"><div class="stat-num">+500</div><div class="stat-lbl">Clientes activos</div></div>
+        <div class="stat-box"><div class="stat-num">4</div><div class="stat-lbl">Países de operación</div></div>
+        <div class="stat-box"><div class="stat-num">+$50M</div><div class="stat-lbl">En activos gestionados</div></div>
         <div class="stat-box"><div class="stat-num">8+</div><div class="stat-lbl">Años de experiencia</div></div>
       </div>
     </div>
@@ -557,22 +245,22 @@ footer p{font-size:12px;color:#555}
   <div class="section-inner">
     <div class="nos-grid">
       <div>
-        <div class="section-tag" style="color:var(--nosotros-accent)">Nosotros</div>
-        <h2 class="section-title">${v.nosTitle}</h2>
+        <div class="section-tag">Nosotros</div>
+        <h2 class="section-title" id="nos-title">Quiénes somos</h2>
         <div class="nos-text">
-          <p>${v.nosP1}</p>
-          <p>${v.nosP2}</p>
+          <p id="nos-p1">Rabbittscapital nació con la visión de democratizar el acceso a inversiones inmobiliarias de alto valor en los mercados más dinámicos de América.</p>
+          <p id="nos-p2">Con un equipo de expertos en finanzas, derecho e inmobiliaria, te ofrecemos acceso a oportunidades exclusivas con acompañamiento personalizado.</p>
         </div>
-        <div class="nos-stats">
-          <div class="nos-stat"><div class="nos-stat-n">${v.s1n}</div><div class="nos-stat-t">${v.s1t}</div></div>
-          <div class="nos-stat"><div class="nos-stat-n">${v.s2n}</div><div class="nos-stat-t">${v.s2t}</div></div>
-          <div class="nos-stat"><div class="nos-stat-n">${v.s3n}</div><div class="nos-stat-t">${v.s3t}</div></div>
+        <div class="nos-stats" id="nos-stats">
+          <div class="nos-stat"><div class="nos-stat-n">+500</div><div class="nos-stat-t">Clientes activos</div></div>
+          <div class="nos-stat"><div class="nos-stat-n">4</div><div class="nos-stat-t">Países</div></div>
+          <div class="nos-stat"><div class="nos-stat-n">+$50M</div><div class="nos-stat-t">Activos gestionados</div></div>
         </div>
       </div>
       <div class="nos-visual">
-        <div class="mission-block"><h4>Misión</h4><p>Democratizar el acceso a inversiones inmobiliarias de alto valor con transparencia y excelencia.</p></div>
-        <div class="mission-block"><h4>Visión</h4><p>Ser el referente latinoamericano en inversión inmobiliaria internacional para 2030.</p></div>
-        <div class="mission-block"><h4>Valores</h4><p>Integridad · Innovación · Resultados · Cercanía con el cliente.</p></div>
+        <div class="mission-block"><h4>Misión</h4><p id="nos-mision">Democratizar el acceso a inversiones inmobiliarias de alto valor con transparencia y excelencia.</p></div>
+        <div class="mission-block"><h4>Visión</h4><p id="nos-vision">Ser el referente latinoamericano en inversión inmobiliaria internacional para 2030.</p></div>
+        <div class="mission-block"><h4>Valores</h4><p id="nos-valores">Integridad · Innovación · Resultados · Cercanía con el cliente.</p></div>
       </div>
     </div>
   </div>
@@ -594,7 +282,7 @@ footer p{font-size:12px;color:#555}
       </div>
     </div>
     <div class="props-grid" id="props-grid">
-      ${propsHTML}
+      <p style="color:#999;font-size:14px">Cargando propiedades...</p>
     </div>
   </div>
 </section>
@@ -604,26 +292,26 @@ footer p{font-size:12px;color:#555}
     <div class="cont-grid">
       <div class="cont-info">
         <div class="section-tag">Contacto</div>
-        <h2 class="section-title">${v.contTitle}</h2>
-        <p>${v.contSub}</p>
+        <h2 class="section-title" id="cont-title">Hablemos de tu inversión</h2>
+        <p id="cont-sub">Nuestros asesores están listos para guiarte.</p>
         <div class="cont-detail">
-          <div class="cont-item"><div class="cont-icon">✉️</div><div class="cont-item-text"><div>Email</div><div>${v.contEmail}</div></div></div>
-          <div class="cont-item"><div class="cont-icon">📞</div><div class="cont-item-text"><div>Teléfono</div><div>${v.contPhone}</div></div></div>
-          <div class="cont-item"><div class="cont-icon">📍</div><div class="cont-item-text"><div>Dirección</div><div>${v.contAddr}</div></div></div>
-          <div class="cont-item"><div class="cont-icon">💬</div><div class="cont-item-text"><div>WhatsApp</div><div>${v.wa}</div></div></div>
+          <div class="cont-item"><div class="cont-icon">✉️</div><div><div class="cont-item-label">Email</div><div class="cont-item-val" id="cont-email">contacto@rabbittscapital.com</div></div></div>
+          <div class="cont-item"><div class="cont-icon">📞</div><div><div class="cont-item-label">Teléfono</div><div class="cont-item-val" id="cont-phone">+56 9 1234 5678</div></div></div>
+          <div class="cont-item"><div class="cont-icon">📍</div><div><div class="cont-item-label">Dirección</div><div class="cont-item-val" id="cont-addr">Santiago, Chile</div></div></div>
+          <div class="cont-item"><div class="cont-icon">💬</div><div><div class="cont-item-label">WhatsApp</div><div class="cont-item-val" id="cont-wa">+56912345678</div></div></div>
         </div>
       </div>
       <div>
-        <form class="cont-form" onsubmit="return false">
-          <input type="text" placeholder="Tu nombre">
-          <input type="email" placeholder="Tu correo electrónico">
-          <input type="tel" placeholder="Tu teléfono">
-          <select style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:13px 16px;color:var(--contact-text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none">
+        <form class="cont-form" onsubmit="sendForm(event)">
+          <input type="text" placeholder="Tu nombre" id="form-nombre" required>
+          <input type="email" placeholder="Tu correo electrónico" id="form-email" required>
+          <input type="tel" placeholder="Tu teléfono" id="form-tel">
+          <select id="form-pais" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:13px 16px;color:var(--cont-text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none">
             <option value="">¿Qué país te interesa?</option>
             <option>Chile</option><option>Miami</option><option>México</option><option>Paraguay</option>
           </select>
-          <textarea placeholder="Cuéntanos sobre tu inversión..."></textarea>
-          <button type="submit">${v.contBtn} →</button>
+          <textarea placeholder="Cuéntanos sobre tu inversión..." id="form-msg"></textarea>
+          <button type="submit" id="cont-btn">Enviar mensaje →</button>
         </form>
       </div>
     </div>
@@ -632,151 +320,151 @@ footer p{font-size:12px;color:#555}
 
 <footer>
   <div class="footer-inner">
-    <div class="footer-logo">${v.logo}</div>
-    <p>${v.footer}</p>
+    <div class="footer-logo" id="footer-logo">RABBITTSCAPITAL</div>
+    <p id="footer-text">© 2025 Rabbittscapital. Todos los derechos reservados.</p>
     <div class="footer-links">
-      <a href="#">Instagram: ${v.ig}</a>
-      <a href="#">WhatsApp</a>
+      <a href="#" id="footer-ig">Instagram</a>
+      <a href="#" id="footer-wa">WhatsApp</a>
       <a href="#">Privacidad</a>
     </div>
   </div>
 </footer>
 
-<script>
-function toggleMenu(){document.getElementById('mobile-menu').classList.toggle('open')}
-function filterProps(pais,btn){
-  const cards=document.querySelectorAll('#props-grid>div');
-  const propsData=${JSON.stringify(props)};
-  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
+import { getFirestore, doc, onSnapshot, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+import { addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBu2UMpFI-aD5yZIMDtkNrBaej8tUwXML8",
+  authDomain: "rabitocapital.firebaseapp.com",
+  projectId: "rabitocapital",
+  storageBucket: "rabitocapital.firebasestorage.app",
+  messagingSenderId: "240408355009",
+  appId: "1:240408355009:web:8fb2b84f9c7f45e0637440",
+  measurementId: "G-8PT183VFV3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let allProps = [];
+
+// Escuchar cambios en contenido en tiempo real
+onSnapshot(doc(db, "sitio", "contenido"), (snap) => {
+  if (!snap.exists()) return;
+  const d = snap.data();
+
+  // Aplicar CSS variables de colores
+  if (d.colores) {
+    Object.entries(d.colores).forEach(([k,v]) => {
+      document.documentElement.style.setProperty(k, v);
+    });
+  }
+
+  // Textos
+  const set = (id, val) => { if (val && document.getElementById(id)) document.getElementById(id).textContent = val; };
+  const setHTML = (id, val) => { if (val && document.getElementById(id)) document.getElementById(id).innerHTML = val; };
+
+  set('nav-logo', d.logo);
+  set('footer-logo', d.logo);
+  set('nav1', d.nav1); set('nav2', d.nav2); set('nav3', d.nav3); set('nav4', d.nav4); set('nav5', d.nav5);
+  setHTML('hero-title', d.heroTitle);
+  set('hero-sub', d.heroSub);
+  set('hero-btn1', d.heroBtn1); set('hero-btn2', d.heroBtn2);
+  set('info-title', d.infoTitle); set('info-desc', d.infoDesc);
+  set('nos-title', d.nosTitle); set('nos-p1', d.nosP1); set('nos-p2', d.nosP2);
+  set('nos-mision', d.nosMision); set('nos-vision', d.nosVision); set('nos-valores', d.nosValores);
+  set('cont-title', d.contTitle); set('cont-sub', d.contSub);
+  set('cont-email', d.contEmail); set('cont-phone', d.contPhone);
+  set('cont-addr', d.contAddr); set('cont-wa', d.contWa);
+  set('cont-btn', d.contBtn);
+  set('footer-text', d.footerText);
+
+  // Tips
+  if (d.tips && d.tips.length) {
+    document.getElementById('tips-grid').innerHTML = d.tips.map(t =>
+      `<div class="tip-item"><div class="tip-title">${t.titulo}</div><div class="tip-desc">${t.desc}</div></div>`
+    ).join('');
+  }
+
+  // Stats info
+  if (d.stats && d.stats.length) {
+    document.getElementById('info-stats').innerHTML = d.stats.map(s =>
+      `<div class="stat-box"><div class="stat-num">${s.num}</div><div class="stat-lbl">${s.lbl}</div></div>`
+    ).join('');
+    document.getElementById('nos-stats').innerHTML = d.stats.slice(0,3).map(s =>
+      `<div class="nos-stat"><div class="nos-stat-n">${s.num}</div><div class="nos-stat-t">${s.lbl}</div></div>`
+    ).join('');
+  }
+
+  document.getElementById('loading').classList.add('hide');
+});
+
+// Cargar propiedades en tiempo real
+const propsRef = collection(db, "propiedades");
+onSnapshot(query(propsRef, orderBy("orden")), (snap) => {
+  allProps = snap.docs.map(d => ({id: d.id, ...d.data()}));
+  renderProps('todos');
+  document.getElementById('loading').classList.add('hide');
+});
+
+window.allProps = [];
+window.filterProps = function(pais, btn) {
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  cards.forEach((c,i)=>{
-    if(pais==='todos'||propsData[i]&&propsData[i].pais===pais)c.style.display='';
-    else c.style.display='none';
-  });
-}
-<\/script>
-</body>
-</html>`;
-}
+  renderProps(pais);
+};
 
-// ===== HELPERS =====
-function getVals(){
-  const g = id => {
-    const el = document.getElementById(id);
-    return el ? el.value : '';
-  };
-  return {
-    logo:g('c-logo'), nav1:g('c-nav1'), nav2:g('c-nav2'), nav3:g('c-nav3'), nav4:g('c-nav4'),
-    heroTitle:g('c-hero-title'), heroSub:g('c-hero-sub'), heroBtn:g('c-hero-btn'), heroBtn2:g('c-hero-btn2'),
-    infoTitle:g('c-info-title'), infoDesc:g('c-info-desc'),
-    tip1t:g('c-tip1t'), tip1d:g('c-tip1d'), tip2t:g('c-tip2t'), tip2d:g('c-tip2d'),
-    tip3t:g('c-tip3t'), tip3d:g('c-tip3d'), tip4t:g('c-tip4t'), tip4d:g('c-tip4d'),
-    nosTitle:g('c-nos-title'), nosP1:g('c-nos-p1'), nosP2:g('c-nos-p2'),
-    s1n:g('c-s1n'), s1t:g('c-s1t'), s2n:g('c-s2n'), s2t:g('c-s2t'), s3n:g('c-s3n'), s3t:g('c-s3t'),
-    contTitle:g('c-cont-title'), contSub:g('c-cont-sub'), contEmail:g('c-cont-email'),
-    contPhone:g('c-cont-phone'), contAddr:g('c-cont-addr'), contBtn:g('c-cont-btn'),
-    footer:g('c-footer'), ig:g('c-ig'), wa:g('c-wa')
-  };
-}
-
-function getCSSVars(){
-  const st = getComputedStyle(document.documentElement);
-  const vars=['--nav-bg','--nav-text','--nav-accent','--hero-bg','--hero-text','--hero-sub','--hero-btn-bg','--hero-btn-text',
-    '--info-bg','--info-text','--info-accent','--tips-bg','--tips-text','--tips-accent',
-    '--nosotros-bg','--nosotros-text','--nosotros-accent','--props-bg','--props-text','--props-accent','--card-bg',
-    '--contact-bg','--contact-text','--contact-accent','--contact-btn-bg','--contact-btn-text'];
-  return vars.map(v=>v+':'+st.getPropertyValue(v).trim()).join(';');
-}
-
-function setVar(name, val){
-  document.documentElement.style.setProperty(name, val);
-  sync();
-}
-
-let syncTimer;
-function sync(){
-  clearTimeout(syncTimer);
-  syncTimer = setTimeout(()=>{
-    const iframe = document.getElementById('preview');
-    const html = buildSite();
-    iframe.srcdoc = html;
-  }, 150);
-}
-
-function toggleSection(head){
-  const body = head.nextElementSibling;
-  body.classList.toggle('open');
-  head.querySelector('span').textContent = body.classList.contains('open') ? '▴' : '▾';
-}
-
-function switchPanel(name){
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.sb-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('panel-'+name).classList.add('active');
-  event.target.classList.add('active');
-}
-
-function toggleSidebar(){
-  document.getElementById('sidebar').classList.toggle('collapsed');
-}
-
-function setView(mode, btn){
-  const iframe = document.getElementById('preview');
-  iframe.className = mode;
-  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-// Props management
-function renderPropsEditor(){
-  const list = document.getElementById('props-list');
-  list.innerHTML = props.map(p=>`
-    <div class="prop-card-editor">
-      <div class="pce-title">${p.titulo} <button class="remove-btn" onclick="removeProp(${p.id})">✕</button></div>
-      <div class="field-group"><label>Título</label><input type="text" value="${p.titulo}" oninput="updateProp(${p.id},'titulo',this.value)"></div>
-      <div class="field-group"><label>País</label>
-        <select oninput="updateProp(${p.id},'pais',this.value)">
-          ${['Chile','Miami','México','Paraguay'].map(c=>`<option${p.pais===c?' selected':''}>${c}</option>`).join('')}
-        </select>
+function renderProps(pais) {
+  const filtered = pais === 'todos' ? allProps : allProps.filter(p => p.pais === pais);
+  const grid = document.getElementById('props-grid');
+  if (!filtered.length) {
+    grid.innerHTML = '<p style="color:#999;font-size:14px">No hay propiedades en este destino por ahora.</p>';
+    return;
+  }
+  grid.innerHTML = filtered.map(p => `
+    <div class="prop-card">
+      <div class="prop-img">🏢<span class="prop-badge">${p.badge||'Disponible'}</span></div>
+      <div class="prop-body">
+        <div class="prop-pais">${p.pais} · ${p.tipo}</div>
+        <h3 class="prop-titulo">${p.titulo}</h3>
+        <p class="prop-desc">${p.desc}</p>
+        <div class="prop-footer">
+          <div><div class="prop-precio-lbl">Precio</div><div class="prop-precio-val">${p.precio}</div></div>
+          <div style="text-align:right"><div class="prop-m2-lbl">Superficie</div><div class="prop-m2-val">${p.m2} m²</div></div>
+        </div>
+        <button class="prop-btn" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">Consultar →</button>
       </div>
-      <div class="field-group"><label>Precio</label><input type="text" value="${p.precio}" oninput="updateProp(${p.id},'precio',this.value)"></div>
-      <div class="field-group"><label>Tipo</label><input type="text" value="${p.tipo}" oninput="updateProp(${p.id},'tipo',this.value)"></div>
-      <div class="field-group"><label>m²</label><input type="text" value="${p.m2}" oninput="updateProp(${p.id},'m2',this.value)"></div>
-      <div class="field-group"><label>Descripción</label><textarea oninput="updateProp(${p.id},'desc',this.value)">${p.desc}</textarea></div>
-      <div class="field-group"><label>Badge</label><input type="text" value="${p.badge}" oninput="updateProp(${p.id},'badge',this.value)"></div>
     </div>
   `).join('');
 }
 
-function addProp(){
-  props.push({id:nextId++, titulo:"Nueva propiedad", pais:"Chile", precio:"UF 0", tipo:"Departamento", m2:"0", desc:"Descripción de la propiedad.", badge:"Nuevo"});
-  renderPropsEditor();
-  sync();
-}
+// Formulario de contacto
+window.sendForm = async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('cont-btn');
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+  try {
+    await addDoc(collection(db, "contactos"), {
+      nombre: document.getElementById('form-nombre').value,
+      email: document.getElementById('form-email').value,
+      tel: document.getElementById('form-tel').value,
+      pais: document.getElementById('form-pais').value,
+      mensaje: document.getElementById('form-msg').value,
+      fecha: serverTimestamp()
+    });
+    btn.textContent = '✓ Mensaje enviado';
+    btn.style.background = '#2d8a4e';
+    e.target.reset();
+  } catch(err) {
+    btn.textContent = 'Error — intenta de nuevo';
+    btn.disabled = false;
+  }
+};
 
-function removeProp(id){
-  props = props.filter(p=>p.id!==id);
-  renderPropsEditor();
-  sync();
-}
-
-function updateProp(id, field, val){
-  const p = props.find(x=>x.id===id);
-  if(p){ p[field]=val; sync(); }
-}
-
-function exportSite(){
-  const html = buildSite();
-  const blob = new Blob([html], {type:'text/html'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'rabbittscapital.html';
-  a.click();
-}
-
-// INIT
-renderPropsEditor();
-sync();
+setTimeout(() => document.getElementById('loading').classList.add('hide'), 5000);
 </script>
 </body>
 </html>
