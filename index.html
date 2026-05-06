@@ -4,467 +4,482 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rabbittscapital</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --nav-bg:#0a0a0a;--nav-text:#fff;--nav-accent:#c9a84c;
-  --hero-bg:#111;--hero-text:#fff;--hero-sub:#c9a84c;--hero-btn-bg:#c9a84c;--hero-btn-text:#0a0a0a;
-  --info-bg:#f5f0e8;--info-text:#1a1a1a;--info-accent:#c9a84c;
-  --tips-bg:#1a1a1a;--tips-text:#fff;--tips-accent:#c9a84c;
-  --nos-bg:#fff;--nos-text:#1a1a1a;--nos-accent:#c9a84c;
-  --props-bg:#f5f0e8;--props-text:#1a1a1a;--props-accent:#c9a84c;--card-bg:#fff;
-  --cont-bg:#0a0a0a;--cont-text:#fff;--cont-accent:#c9a84c;--cont-btn-bg:#c9a84c;--cont-btn-text:#0a0a0a;
-}
-body{font-family:'DM Sans',sans-serif;color:#1a1a1a}
+:root{--navy:#0f2340;--navy2:#1a3a5c;--gold:#b8964e;--gold2:#d4af6a;--white:#fff;--off:#f7f5f0;--light:#eef2f7;--text:#1a2332;--muted:#5a6a7e;--border:#d4dce8}
+body{font-family:'Inter',sans-serif;color:var(--text);background:var(--white)}
 html{scroll-behavior:smooth}
-a{text-decoration:none}
+a{text-decoration:none;color:inherit}
 
-/* Loading */
-#loading{position:fixed;inset:0;background:#0a0a0a;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.5s}
-#loading.hide{opacity:0;pointer-events:none}
-.loader-logo{font-family:'Cormorant Garamond',serif;font-size:28px;letter-spacing:4px;color:#c9a84c;animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+nav{background:var(--navy);position:sticky;top:0;z-index:999;box-shadow:0 2px 24px rgba(15,35,64,0.35)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 40px;height:72px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:'Playfair Display',serif;font-size:17px;letter-spacing:3px;color:var(--gold);cursor:pointer;line-height:1.2}
+.nav-logo small{display:block;font-size:9px;letter-spacing:5px;color:rgba(255,255,255,0.3);font-family:'Inter',sans-serif;font-weight:300;margin-top:3px}
+.nav-links{display:flex;gap:2px;list-style:none}
+.nav-links li button{background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.65);font-size:13px;padding:8px 16px;border-radius:6px;transition:all 0.2s;font-family:'Inter',sans-serif;letter-spacing:0.3px}
+.nav-links li button:hover{color:#fff;background:rgba(255,255,255,0.07)}
+.nav-links li button.active{color:var(--gold)}
+.nav-cta{background:var(--gold)!important;color:var(--navy)!important;font-weight:500!important;border-radius:8px!important}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{width:22px;height:1.5px;background:rgba(255,255,255,0.6);border-radius:2px;display:block}
+#mob-menu{display:none;background:var(--navy2);padding:12px 24px 20px;border-top:1px solid rgba(255,255,255,0.06)}
+#mob-menu.open{display:block}
+#mob-menu button{display:block;width:100%;text-align:left;background:none;border:none;color:rgba(255,255,255,0.75);padding:12px 0;font-size:14px;font-family:'Inter',sans-serif;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.05)}
 
-nav{background:var(--nav-bg);position:sticky;top:0;z-index:999;padding:0 5%}
-.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;height:68px;justify-content:space-between}
-.nav-logo{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:2px;color:var(--nav-accent);font-weight:600}
-.nav-links{display:flex;gap:32px;list-style:none}
-.nav-links a{color:var(--nav-text);font-size:13px;letter-spacing:0.5px;opacity:0.8;transition:all 0.2s}
-.nav-links a:hover{opacity:1;color:var(--nav-accent)}
-.nav-cta{background:var(--nav-accent);color:#000!important;padding:9px 20px;border-radius:6px;font-size:12px;font-weight:600;opacity:1!important}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
-.hamburger span{width:22px;height:2px;background:var(--nav-text);border-radius:2px;display:block}
-#mobile-menu{display:none;background:var(--nav-bg);padding:16px 5%}
-#mobile-menu.open{display:block}
-#mobile-menu a{display:block;color:var(--nav-text);padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:14px}
+.page{display:none;min-height:calc(100vh - 72px)}
+.page.active{display:block}
 
-/* HERO */
-#inicio{background:var(--hero-bg);min-height:90vh;display:flex;align-items:center;padding:80px 5%}
-.hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.hero-tag{display:inline-block;font-size:11px;letter-spacing:2px;color:var(--hero-sub);text-transform:uppercase;border:1px solid var(--hero-sub);padding:5px 14px;border-radius:20px;margin-bottom:24px}
-.hero-inner h1{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5vw,60px);font-weight:300;line-height:1.15;color:var(--hero-text);margin-bottom:20px}
-.hero-inner h1 em{font-style:normal;color:var(--hero-sub)}
-.hero-inner p{font-size:15px;line-height:1.7;color:rgba(255,255,255,0.65);margin-bottom:32px;max-width:480px}
+/* ===== INICIO ===== */
+.hero{background:var(--navy);min-height:88vh;display:flex;align-items:center;padding:80px 40px}
+.hero-wrap{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:80px;align-items:center;width:100%}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:24px}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--gold)}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(40px,5vw,64px);font-weight:300;line-height:1.1;color:#fff;margin-bottom:22px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero-p{font-size:16px;line-height:1.85;color:rgba(255,255,255,0.55);margin-bottom:36px;max-width:500px}
 .hero-btns{display:flex;gap:12px;flex-wrap:wrap}
-.btn-primary{background:var(--hero-btn-bg);color:var(--hero-btn-text);padding:14px 28px;border-radius:8px;font-weight:600;font-size:14px;border:none;cursor:pointer;transition:opacity 0.2s}
-.btn-primary:hover{opacity:0.88}
-.btn-ghost{background:transparent;color:var(--hero-text);border:1px solid rgba(255,255,255,0.3);padding:14px 28px;border-radius:8px;font-size:14px;cursor:pointer;transition:all 0.2s}
-.btn-ghost:hover{border-color:var(--hero-sub);color:var(--hero-sub)}
-.hero-visual{display:flex;flex-direction:column;gap:12px}
-.hero-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:20px 24px}
-.hero-card-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--hero-sub);margin-bottom:6px}
-.hero-card-val{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--hero-text)}
-.hero-card-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px}
-.countries{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.country-pill{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--hero-text)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.22s;border:none;font-family:'Inter',sans-serif}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.22)}
+.btn-outline:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.4)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:var(--navy2)}
+.hero-right{display:flex;flex-direction:column;gap:14px}
+.h-metric{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:12px;padding:22px 26px;transition:border-color 0.2s}
+.h-metric:hover{border-color:rgba(184,150,78,0.3)}
+.h-metric-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.h-metric-val{font-family:'Playfair Display',serif;font-size:30px;font-weight:300;color:#fff}
+.h-metric-sub{font-size:11px;color:rgba(255,255,255,0.3);margin-top:3px}
+.countries{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ctag{background:rgba(184,150,78,0.07);border:1px solid rgba(184,150,78,0.18);border-radius:8px;padding:9px 13px;font-size:13px;color:rgba(255,255,255,0.78);display:flex;align-items:center;gap:8px}
 
-/* SECCIONES */
-.section{padding:80px 5%}
-.section-inner{max-width:1200px;margin:0 auto}
-.section-tag{font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
-.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,44px);font-weight:300;line-height:1.2;margin-bottom:20px}
+/* INFO SECTION */
+.section-info{background:var(--off);padding:80px 40px}
+.s-inner{max-width:1280px;margin:0 auto}
+.eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--gold)}
+.s-title{font-family:'Playfair Display',serif;font-size:clamp(26px,3.5vw,40px);font-weight:300;color:var(--navy);line-height:1.2;margin-bottom:48px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.info-desc{font-size:16px;line-height:1.9;color:var(--muted);margin-bottom:28px}
+.tips-list{display:flex;flex-direction:column;gap:14px}
+.tip-row{display:flex;gap:18px;align-items:flex-start;padding:18px 20px;background:#fff;border-radius:10px;border:1px solid var(--border)}
+.tip-n{width:34px;height:34px;border-radius:8px;background:var(--light);color:var(--navy);font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Playfair Display',serif}
+.tip-c h4{font-size:14px;font-weight:500;color:var(--navy);margin-bottom:3px}
+.tip-c p{font-size:13px;color:var(--muted);line-height:1.5}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stat-card{background:var(--navy);border-radius:12px;padding:28px 22px;text-align:center}
+.stat-n{font-family:'Playfair Display',serif;font-size:36px;font-weight:300;color:var(--gold)}
+.stat-l{font-size:11px;color:rgba(255,255,255,0.45);margin-top:6px;letter-spacing:0.5px}
 
-/* INFO */
-#informacion{background:var(--info-bg)}
-#informacion .section-tag{color:var(--info-accent)}
-#informacion .section-title{color:var(--info-text)}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
-.info-desc{font-size:16px;line-height:1.8;color:var(--info-text);opacity:0.75;margin-bottom:32px}
-.tips-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.tip-item{background:var(--tips-bg);border-radius:10px;padding:20px;border-left:3px solid var(--tips-accent)}
-.tip-title{font-size:13px;font-weight:600;color:var(--tips-accent);margin-bottom:6px}
-.tip-desc{font-size:12px;color:var(--tips-text);opacity:0.7;line-height:1.5}
-.info-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.stat-box{text-align:center;padding:28px 20px;border:1px solid rgba(0,0,0,0.08);border-radius:12px;background:#fff}
-.stat-num{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--info-accent)}
-.stat-lbl{font-size:12px;color:var(--info-text);opacity:0.6;margin-top:4px}
+/* ===== PROPIEDADES ===== */
+#page-propiedades{background:var(--off)}
+.page-banner{background:var(--navy);padding:60px 40px;text-align:center}
+.page-banner h1{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,46px);font-weight:300;color:#fff;margin-top:12px}
+.props-wrap{max-width:1280px;margin:0 auto;padding:40px 40px}
+.filter-row{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-bottom:36px}
+.ftab{padding:7px 18px;border-radius:20px;border:1px solid var(--border);font-size:12px;cursor:pointer;background:#fff;color:var(--muted);transition:all 0.2s;font-family:'Inter',sans-serif}
+.ftab:hover,.ftab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.props-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:26px}
+.prop-card{background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:all 0.28s}
+.prop-card:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(15,35,64,0.1);border-color:var(--navy)}
+.prop-img{height:210px;overflow:hidden;position:relative;background:var(--light)}
+.prop-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s}
+.prop-card:hover .prop-img img{transform:scale(1.05)}
+.prop-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:48px;background:linear-gradient(135deg,var(--light),var(--border))}
+.p-badge{position:absolute;top:12px;left:12px;font-size:10px;font-weight:500;padding:4px 11px;border-radius:20px;letter-spacing:0.5px}
+.p-badge-navy{background:var(--navy);color:#fff}
+.p-badge-gold{background:var(--gold);color:var(--navy)}
+.p-country{position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.94);color:var(--navy);font-size:11px;padding:4px 10px;border-radius:20px;font-weight:500}
+.prop-body{padding:22px}
+.prop-type{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.prop-titulo{font-family:'Playfair Display',serif;font-size:19px;font-weight:400;color:var(--navy);margin-bottom:8px;line-height:1.3}
+.prop-desc-short{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.prop-footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:14px;border-top:1px solid var(--border)}
+.prop-precio-lbl,.prop-m2-lbl{font-size:10px;color:var(--muted);letter-spacing:0.3px;margin-bottom:2px}
+.prop-precio-val{font-family:'Playfair Display',serif;font-size:19px;color:var(--navy)}
+.prop-m2-val{font-size:15px;color:var(--navy);font-weight:500}
+.prop-cta-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;padding:10px;background:var(--light);border-radius:8px;font-size:13px;color:var(--navy);font-weight:500;width:100%;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s}
+.prop-cta-btn:hover{background:var(--navy);color:#fff}
 
-/* NOSOTROS */
-#nosotros{background:var(--nos-bg)}
-#nosotros .section-tag{color:var(--nos-accent)}
-#nosotros .section-title{color:var(--nos-text)}
-.nos-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.nos-text p{font-size:15px;line-height:1.8;color:var(--nos-text);opacity:0.7;margin-bottom:16px}
-.nos-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
-.nos-stat{text-align:center;padding:24px 12px;border:1px solid rgba(0,0,0,0.08);border-radius:12px}
-.nos-stat-n{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--nos-accent)}
-.nos-stat-t{font-size:11px;color:var(--nos-text);opacity:0.55;margin-top:4px}
-.nos-visual{background:linear-gradient(135deg,#1a1a1a,#2d2d2d);border-radius:16px;padding:40px;color:#fff;display:flex;flex-direction:column;gap:20px}
-.mission-block{border-left:3px solid var(--nos-accent);padding-left:16px}
-.mission-block h4{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--nos-accent);margin-bottom:6px}
-.mission-block p{font-size:14px;line-height:1.6;opacity:0.7}
+/* ===== DETALLE ===== */
+#page-detalle{background:var(--off);padding:40px 40px}
+.det-inner{max-width:1280px;margin:0 auto}
+.det-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;margin-bottom:28px;transition:color 0.2s;background:none;border:none;font-family:'Inter',sans-serif}
+.det-back:hover{color:var(--navy)}
+.det-grid{display:grid;grid-template-columns:1fr 380px;gap:48px;align-items:start}
+.det-gallery{border-radius:14px;overflow:hidden;border:1px solid var(--border)}
+.gal-main{width:100%;height:440px;object-fit:cover;display:block;background:var(--light)}
+.gal-ph{width:100%;height:440px;display:flex;align-items:center;justify-content:center;font-size:80px;background:linear-gradient(135deg,var(--light),var(--border))}
+.gal-thumbs{display:flex;gap:8px;padding:12px;background:#fff;border-top:1px solid var(--border);flex-wrap:wrap}
+.gal-thumb{width:68px;height:54px;object-fit:cover;border-radius:6px;cursor:pointer;opacity:0.55;transition:all 0.2s;border:2px solid transparent}
+.gal-thumb:hover,.gal-thumb.active{opacity:1;border-color:var(--navy)}
+.det-info{position:sticky;top:90px}
+.det-badge{display:inline-block;font-size:10px;padding:4px 12px;border-radius:20px;margin-bottom:12px;letter-spacing:0.5px}
+.det-type{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+.det-titulo{font-family:'Playfair Display',serif;font-size:30px;font-weight:300;color:var(--navy);line-height:1.2;margin-bottom:8px}
+.det-loc{font-size:13px;color:var(--muted);margin-bottom:22px}
+.det-price-box{background:var(--navy);border-radius:12px;padding:22px;margin-bottom:18px}
+.det-price-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:6px}
+.det-price-val{font-family:'Playfair Display',serif;font-size:34px;font-weight:300;color:var(--gold)}
+.det-price-cur{font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px}
+.det-specs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.spec-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.spec-lbl{font-size:10px;color:var(--muted);margin-bottom:3px}
+.spec-val{font-family:'Playfair Display',serif;font-size:20px;color:var(--navy)}
+.det-desc{font-size:14px;line-height:1.85;color:var(--muted);margin-bottom:20px}
+.det-feats h4{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--navy);margin-bottom:10px}
+.feat-tag{display:inline-block;background:var(--light);border:1px solid var(--border);border-radius:6px;padding:4px 11px;font-size:12px;color:var(--navy);margin:0 5px 5px 0}
+.det-btns{display:flex;flex-direction:column;gap:9px;margin-top:20px}
 
-/* PROPIEDADES */
-#propiedades{background:var(--props-bg)}
-#propiedades .section-tag{color:var(--props-accent)}
-#propiedades .section-title{color:var(--props-text)}
-.props-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:16px}
-.filter-tabs{display:flex;gap:8px;flex-wrap:wrap}
-.ftab{padding:7px 16px;border-radius:20px;border:1px solid var(--props-accent);font-size:12px;cursor:pointer;background:transparent;color:var(--props-text);transition:all 0.2s;font-family:'DM Sans',sans-serif}
-.ftab.active,.ftab:hover{background:var(--props-accent);color:#000;font-weight:600}
-.props-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
-.prop-card{background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,0.08);transition:transform 0.2s}
-.prop-card:hover{transform:translateY(-4px)}
-.prop-img{background:linear-gradient(135deg,#1a1a1a 60%,#2d2d2d);height:160px;display:flex;align-items:center;justify-content:center;position:relative;font-size:48px}
-.prop-badge{position:absolute;top:12px;right:12px;background:var(--props-accent);color:#000;font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px}
-.prop-body{padding:20px}
-.prop-pais{font-size:10px;color:var(--props-accent);font-weight:600;letter-spacing:1px;margin-bottom:4px}
-.prop-titulo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--props-text);margin-bottom:8px}
-.prop-desc{font-size:13px;color:#666;line-height:1.5;margin-bottom:12px}
-.prop-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;padding-top:12px}
-.prop-precio-lbl,.prop-m2-lbl{font-size:11px;color:#999}
-.prop-precio-val,.prop-m2-val{font-size:16px;font-weight:600;color:var(--props-text)}
-.prop-btn{width:100%;margin-top:14px;padding:10px;background:var(--props-accent);color:#000;border:none;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+/* ===== NOSOTROS ===== */
+#page-nosotros{background:var(--white)}
+.nos-banner{background:var(--navy);padding:80px 40px;text-align:center}
+.nos-banner h1{font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,52px);font-weight:300;color:#fff;margin-top:12px}
+.nos-banner p{font-size:15px;color:rgba(255,255,255,0.55);max-width:560px;margin:14px auto 0;line-height:1.8}
+.nos-body{max-width:1280px;margin:0 auto;padding:80px 40px}
+.nos-main{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-bottom:72px}
+.nos-text h2{font-family:'Playfair Display',serif;font-size:30px;font-weight:300;color:var(--navy);margin-bottom:20px}
+.nos-text p{font-size:15px;line-height:1.9;color:var(--muted);margin-bottom:14px}
+.vals-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.val-card{background:var(--navy);border-radius:12px;padding:26px 22px}
+.val-card h3{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;color:var(--gold);margin-bottom:8px}
+.val-card p{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.65}
+.nos-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;background:var(--off);border-radius:16px;padding:48px;text-align:center}
+.ns-n{font-family:'Playfair Display',serif;font-size:48px;font-weight:300;color:var(--navy)}
+.ns-t{font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:0.5px}
 
-/* CONTACTO */
-#contacto{background:var(--cont-bg)}
-#contacto .section-tag{color:var(--cont-accent)}
-#contacto .section-title{color:var(--cont-text)}
-.cont-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
-.cont-info p{font-size:15px;color:var(--cont-text);opacity:0.6;line-height:1.7;margin-bottom:32px}
-.cont-detail{display:flex;flex-direction:column;gap:16px}
-.cont-item{display:flex;gap:14px;align-items:center}
-.cont-icon{width:40px;height:40px;border-radius:8px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.cont-item-label{font-size:11px;color:var(--cont-accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
-.cont-item-val{font-size:14px;color:var(--cont-text)}
-.cont-form{display:flex;flex-direction:column;gap:14px}
-.cont-form input,.cont-form textarea,.cont-form select{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:13px 16px;color:var(--cont-text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s}
-.cont-form input:focus,.cont-form textarea:focus{border-color:var(--cont-accent)}
-.cont-form textarea{min-height:100px;resize:vertical}
-.cont-form button{background:var(--cont-btn-bg);color:var(--cont-btn-text);padding:14px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
-.cont-form button:hover{opacity:0.88}
+/* ===== CONTACTO ===== */
+#page-contacto{background:var(--off)}
+.cont-banner{background:var(--navy);padding:80px 40px;text-align:center}
+.cont-banner h1{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,46px);font-weight:300;color:#fff;margin-top:12px}
+.cont-banner p{font-size:15px;color:rgba(255,255,255,0.55);max-width:500px;margin:12px auto 0}
+.cont-body{max-width:1100px;margin:0 auto;padding:64px 40px}
+.cont-main{display:grid;grid-template-columns:340px 1fr;gap:56px;align-items:start}
+.cont-info-card{background:#fff;border-radius:14px;padding:32px;border:1px solid var(--border)}
+.cont-info-card h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:400;color:var(--navy);margin-bottom:24px}
+.ci-item{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+.ci-icon{width:42px;height:42px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ci-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
+.ci-val{font-size:14px;color:var(--navy);font-weight:500}
+.cont-form-card{background:#fff;border-radius:14px;padding:36px;border:1px solid var(--border)}
+.cont-form-card h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:400;color:var(--navy);margin-bottom:26px}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.f-field{margin-bottom:14px}
+.f-field label{display:block;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.f-field input,.f-field textarea,.f-field select{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);outline:none;transition:border 0.2s;background:#fff}
+.f-field input:focus,.f-field textarea:focus{border-color:var(--navy)}
+.f-field textarea{min-height:100px;resize:vertical;line-height:1.6}
+.f-field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a6a7e'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;appearance:none}
 
-footer{background:#050505;padding:24px 5%;border-top:1px solid #1a1a1a}
-.footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-.footer-logo{font-family:'Cormorant Garamond',serif;font-size:16px;letter-spacing:2px;color:var(--nav-accent)}
-footer p{font-size:12px;color:#555}
-.footer-links{display:flex;gap:16px}
-.footer-links a{font-size:12px;color:#555;transition:color 0.2s}
-.footer-links a:hover{color:var(--nav-accent)}
+footer{background:var(--navy);padding:52px 40px 32px}
+.ft-inner{max-width:1280px;margin:0 auto}
+.ft-top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;margin-bottom:40px}
+.ft-brand .logo{font-family:'Playfair Display',serif;font-size:17px;letter-spacing:3px;color:var(--gold);margin-bottom:10px}
+.ft-brand p{font-size:13px;color:rgba(255,255,255,0.35);line-height:1.7}
+.ft-col h4{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:16px}
+.ft-col button{display:block;background:none;border:none;font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:10px;cursor:pointer;font-family:'Inter',sans-serif;text-align:left;transition:color 0.2s}
+.ft-col button:hover{color:var(--gold)}
+.ft-bottom{border-top:1px solid rgba(255,255,255,0.07);padding-top:24px;display:flex;justify-content:space-between;align-items:center}
+.ft-bottom p{font-size:12px;color:rgba(255,255,255,0.28)}
 
-@media(max-width:900px){
-  .hero-inner,.info-grid,.nos-grid,.cont-grid{grid-template-columns:1fr}
-  .hero-visual{display:grid;grid-template-columns:1fr 1fr}
-  .nos-visual{display:none}
+@media(max-width:1024px){
+  .hero-wrap{grid-template-columns:1fr;gap:48px}
+  .info-grid,.det-grid,.nos-main,.cont-main{grid-template-columns:1fr}
+  .det-info{position:static}
+  .ft-top{grid-template-columns:1fr 1fr}
 }
-@media(max-width:640px){
-  .nav-links,.nav-cta{display:none}
-  .hamburger{display:flex}
-  .hero-visual{grid-template-columns:1fr}
-  .tips-grid{grid-template-columns:1fr}
-  .nos-stats{grid-template-columns:1fr 1fr}
-  .footer-inner{flex-direction:column;text-align:center}
+@media(max-width:768px){
+  .nav-links{display:none}.hamburger{display:flex}
+  .hero{padding:60px 20px}.section-info,.props-wrap{padding:50px 20px}
+  #page-detalle,#page-nosotros,#page-contacto{padding:0}
+  .nos-body,.cont-body{padding:48px 20px}
+  .props-grid{grid-template-columns:1fr}
+  .nos-stats-row{grid-template-columns:1fr;gap:32px}
+  .f-row{grid-template-columns:1fr}
+  .vals-grid{grid-template-columns:1fr}
+  .ft-top{grid-template-columns:1fr}
+  .ft-bottom{flex-direction:column;gap:8px;text-align:center}
+  .det-inner{padding:20px}
 }
 </style>
 </head>
 <body>
 
-<div id="loading"><div class="loader-logo">RABBITTSCAPITAL</div></div>
-
 <nav>
   <div class="nav-inner">
-    <div class="nav-logo" id="nav-logo">RABBITTSCAPITAL</div>
+    <div class="nav-logo" onclick="goPage('inicio')">RABBITTSCAPITAL<small>REAL ESTATE</small></div>
     <ul class="nav-links">
-      <li><a href="#inicio" id="nav1">Inicio</a></li>
-      <li><a href="#informacion" id="nav2">Información</a></li>
-      <li><a href="#nosotros" id="nav3">Nosotros</a></li>
-      <li><a href="#propiedades" id="nav4">Propiedades</a></li>
-      <li><a href="#contacto" class="nav-cta" id="nav5">Contacto</a></li>
+      <li><button class="active" id="nb-inicio" onclick="goPage('inicio')">Inicio</button></li>
+      <li><button id="nb-propiedades" onclick="goPage('propiedades')">Propiedades</button></li>
+      <li><button id="nb-nosotros" onclick="goPage('nosotros')">Nosotros</button></li>
+      <li><button class="nav-cta" id="nb-contacto" onclick="goPage('contacto')">Contacto</button></li>
     </ul>
-    <button class="hamburger" onclick="document.getElementById('mobile-menu').classList.toggle('open')">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="hamburger" onclick="document.getElementById('mob-menu').classList.toggle('open')"><span></span><span></span><span></span></button>
   </div>
-  <div id="mobile-menu">
-    <a href="#inicio">Inicio</a>
-    <a href="#informacion">Información</a>
-    <a href="#nosotros">Nosotros</a>
-    <a href="#propiedades">Propiedades</a>
-    <a href="#contacto">Contacto</a>
+  <div id="mob-menu">
+    <button onclick="goPage('inicio');closeMob()">Inicio</button>
+    <button onclick="goPage('propiedades');closeMob()">Propiedades</button>
+    <button onclick="goPage('nosotros');closeMob()">Nosotros</button>
+    <button onclick="goPage('contacto');closeMob()">Contacto</button>
   </div>
 </nav>
 
-<section id="inicio">
-  <div class="hero-inner">
-    <div>
-      <div class="hero-tag">Inversión Inmobiliaria Premium</div>
-      <h1 id="hero-title">Inversiones inmobiliarias que <em>transforman tu futuro</em></h1>
-      <p id="hero-sub">Propiedades exclusivas en Chile, Miami, México y Paraguay. Tu capital, en los mejores destinos del mundo.</p>
-      <div class="hero-btns">
-        <button class="btn-primary" id="hero-btn1" onclick="document.getElementById('propiedades').scrollIntoView({behavior:'smooth'})">Ver Propiedades</button>
-        <button class="btn-ghost" id="hero-btn2" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">Contáctanos</button>
+<!-- INICIO -->
+<div class="page active" id="page-inicio">
+  <div class="hero">
+    <div class="hero-wrap">
+      <div>
+        <div class="hero-eyebrow">Inversión Inmobiliaria Premium</div>
+        <h1 id="d-hero-title">Propiedades que <em>construyen tu patrimonio</em></h1>
+        <p class="hero-p" id="d-hero-sub">Acceso exclusivo a oportunidades inmobiliarias en Chile, Miami, México y Paraguay. Capital inteligente en los mercados más dinámicos de América.</p>
+        <div class="hero-btns">
+          <button class="btn btn-gold" id="d-btn1" onclick="goPage('propiedades')">Ver Propiedades</button>
+          <button class="btn btn-outline" id="d-btn2" onclick="goPage('contacto')">Hablar con un asesor</button>
+        </div>
       </div>
-    </div>
-    <div class="hero-visual">
-      <div class="hero-card">
-        <div class="hero-card-label">Mercados activos</div>
-        <div class="hero-card-val">4 países</div>
-        <div class="hero-card-sub">Chile · Miami · México · Paraguay</div>
-      </div>
-      <div class="countries">
-        <div class="country-pill">🇨🇱 Chile</div>
-        <div class="country-pill">🇺🇸 Miami</div>
-        <div class="country-pill">🇲🇽 México</div>
-        <div class="country-pill">🇵🇾 Paraguay</div>
-      </div>
-      <div class="hero-card">
-        <div class="hero-card-label">Activos gestionados</div>
-        <div class="hero-card-val" id="hero-stat-val">+$50M USD</div>
-        <div class="hero-card-sub">En portafolio inmobiliario activo</div>
+      <div class="hero-right">
+        <div class="h-metric"><div class="h-metric-lbl">Activos gestionados</div><div class="h-metric-val" id="d-s1n">+$50M</div><div class="h-metric-sub" id="d-s1l">En portafolio inmobiliario activo</div></div>
+        <div class="countries">
+          <div class="ctag">🇨🇱 Chile</div><div class="ctag">🇺🇸 Miami</div>
+          <div class="ctag">🇲🇽 México</div><div class="ctag">🇵🇾 Paraguay</div>
+        </div>
+        <div class="h-metric"><div class="h-metric-lbl">Clientes</div><div class="h-metric-val" id="d-s2n">+500</div><div class="h-metric-sub" id="d-s2l">Inversores confían en nosotros</div></div>
       </div>
     </div>
   </div>
-</section>
-
-<section id="informacion" class="section">
-  <div class="section-inner">
-    <div class="info-grid">
-      <div>
-        <div class="section-tag">Información</div>
-        <h2 class="section-title" id="info-title">¿Por qué invertir con nosotros?</h2>
-        <p class="info-desc" id="info-desc">Somos especialistas en conectar inversores con las mejores oportunidades inmobiliarias en Latinoamérica y Estados Unidos.</p>
-        <div class="tips-grid" id="tips-grid">
-          <div class="tip-item"><div class="tip-title">Mercados Clave</div><div class="tip-desc">Presencia en Chile, Miami, México y Paraguay.</div></div>
-          <div class="tip-item"><div class="tip-title">Rentabilidad</div><div class="tip-desc">Retornos superiores al promedio del mercado.</div></div>
-          <div class="tip-item"><div class="tip-title">Asesoría Integral</div><div class="tip-desc">Te acompañamos en cada etapa de tu inversión.</div></div>
-          <div class="tip-item"><div class="tip-title">Seguridad Jurídica</div><div class="tip-desc">Contratos transparentes y respaldo legal total.</div></div>
+  <div class="section-info">
+    <div class="s-inner">
+      <div class="eyebrow">¿Por qué elegirnos?</div>
+      <div class="s-title" id="d-info-title">Experiencia que genera resultados reales</div>
+      <div class="info-grid">
+        <div>
+          <p class="info-desc" id="d-info-desc">Somos especialistas en conectar inversores con oportunidades inmobiliarias de alto retorno.</p>
+          <div class="tips-list" id="d-tips"></div>
         </div>
-      </div>
-      <div class="info-stats" id="info-stats">
-        <div class="stat-box"><div class="stat-num">+500</div><div class="stat-lbl">Clientes activos</div></div>
-        <div class="stat-box"><div class="stat-num">4</div><div class="stat-lbl">Países de operación</div></div>
-        <div class="stat-box"><div class="stat-num">+$50M</div><div class="stat-lbl">En activos gestionados</div></div>
-        <div class="stat-box"><div class="stat-num">8+</div><div class="stat-lbl">Años de experiencia</div></div>
+        <div class="stats-grid" id="d-stats"></div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
-<section id="nosotros" class="section">
-  <div class="section-inner">
-    <div class="nos-grid">
-      <div>
-        <div class="section-tag">Nosotros</div>
-        <h2 class="section-title" id="nos-title">Quiénes somos</h2>
-        <div class="nos-text">
-          <p id="nos-p1">Rabbittscapital nació con la visión de democratizar el acceso a inversiones inmobiliarias de alto valor en los mercados más dinámicos de América.</p>
-          <p id="nos-p2">Con un equipo de expertos en finanzas, derecho e inmobiliaria, te ofrecemos acceso a oportunidades exclusivas con acompañamiento personalizado.</p>
-        </div>
-        <div class="nos-stats" id="nos-stats">
-          <div class="nos-stat"><div class="nos-stat-n">+500</div><div class="nos-stat-t">Clientes activos</div></div>
-          <div class="nos-stat"><div class="nos-stat-n">4</div><div class="nos-stat-t">Países</div></div>
-          <div class="nos-stat"><div class="nos-stat-n">+$50M</div><div class="nos-stat-t">Activos gestionados</div></div>
-        </div>
+<!-- PROPIEDADES -->
+<div class="page" id="page-propiedades">
+  <div class="page-banner">
+    <div class="eyebrow" style="justify-content:center">Portafolio</div>
+    <h1>Nuestras Propiedades</h1>
+  </div>
+  <div class="props-wrap">
+    <div class="filter-row">
+      <button class="ftab active" onclick="filterP('todos',this)">Todos</button>
+      <button class="ftab" onclick="filterP('Chile',this)">🇨🇱 Chile</button>
+      <button class="ftab" onclick="filterP('Miami',this)">🇺🇸 Miami</button>
+      <button class="ftab" onclick="filterP('México',this)">🇲🇽 México</button>
+      <button class="ftab" onclick="filterP('Paraguay',this)">🇵🇾 Paraguay</button>
+    </div>
+    <div class="props-grid" id="props-grid"><div style="grid-column:1/-1;text-align:center;padding:80px;color:var(--muted)">Cargando...</div></div>
+  </div>
+</div>
+
+<!-- DETALLE -->
+<div class="page" id="page-detalle">
+  <div class="det-inner">
+    <button class="det-back" onclick="goPage('propiedades')">← Volver a propiedades</button>
+    <div class="det-grid" id="det-content"></div>
+  </div>
+</div>
+
+<!-- NOSOTROS -->
+<div class="page" id="page-nosotros">
+  <div class="nos-banner">
+    <div class="eyebrow" style="justify-content:center">Nuestra historia</div>
+    <h1 id="d-nos-title">Quiénes somos</h1>
+    <p id="d-nos-sub">Tu socio estratégico en la construcción de patrimonio inmobiliario.</p>
+  </div>
+  <div class="nos-body">
+    <div class="nos-main">
+      <div class="nos-text">
+        <h2 id="d-nos-h2">Democratizando la inversión inmobiliaria</h2>
+        <p id="d-nos-p1">Rabbittscapital nació con la visión de abrir las puertas del mercado inmobiliario premium a inversores que buscan diversificar su patrimonio en los destinos más estratégicos de América.</p>
+        <p id="d-nos-p2">Con un equipo de expertos en finanzas, derecho e inmobiliaria, te ofrecemos acceso a oportunidades exclusivas con acompañamiento personalizado.</p>
       </div>
-      <div class="nos-visual">
-        <div class="mission-block"><h4>Misión</h4><p id="nos-mision">Democratizar el acceso a inversiones inmobiliarias de alto valor con transparencia y excelencia.</p></div>
-        <div class="mission-block"><h4>Visión</h4><p id="nos-vision">Ser el referente latinoamericano en inversión inmobiliaria internacional para 2030.</p></div>
-        <div class="mission-block"><h4>Valores</h4><p id="nos-valores">Integridad · Innovación · Resultados · Cercanía con el cliente.</p></div>
+      <div class="vals-grid">
+        <div class="val-card"><h3>Misión</h3><p id="d-mision">Conectar inversores con las mejores oportunidades inmobiliarias con transparencia y excelencia.</p></div>
+        <div class="val-card"><h3>Visión</h3><p id="d-vision">Ser el referente latinoamericano en inversión inmobiliaria internacional para 2030.</p></div>
+        <div class="val-card"><h3>Integridad</h3><p>Operamos con total transparencia. Cada transacción refleja nuestros valores.</p></div>
+        <div class="val-card"><h3>Resultados</h3><p>No vendemos promesas, entregamos retornos medibles y verificables.</p></div>
       </div>
+    </div>
+    <div class="nos-stats-row" id="d-nos-stats">
+      <div><div class="ns-n">+500</div><div class="ns-t">Clientes activos</div></div>
+      <div><div class="ns-n">4</div><div class="ns-t">Países de operación</div></div>
+      <div><div class="ns-n">8+</div><div class="ns-t">Años de experiencia</div></div>
     </div>
   </div>
-</section>
+</div>
 
-<section id="propiedades" class="section">
-  <div class="section-inner">
-    <div class="props-header">
-      <div>
-        <div class="section-tag">Portafolio</div>
-        <h2 class="section-title">Nuestras propiedades</h2>
-      </div>
-      <div class="filter-tabs">
-        <button class="ftab active" onclick="filterProps('todos',this)">Todos</button>
-        <button class="ftab" onclick="filterProps('Chile',this)">Chile</button>
-        <button class="ftab" onclick="filterProps('Miami',this)">Miami</button>
-        <button class="ftab" onclick="filterProps('México',this)">México</button>
-        <button class="ftab" onclick="filterProps('Paraguay',this)">Paraguay</button>
-      </div>
-    </div>
-    <div class="props-grid" id="props-grid">
-      <p style="color:#999;font-size:14px">Cargando propiedades...</p>
-    </div>
+<!-- CONTACTO -->
+<div class="page" id="page-contacto">
+  <div class="cont-banner">
+    <div class="eyebrow" style="justify-content:center">Contacto</div>
+    <h1 id="d-cont-title">Hablemos de tu inversión</h1>
+    <p id="d-cont-sub">Nuestros asesores están listos para guiarte.</p>
   </div>
-</section>
-
-<section id="contacto" class="section">
-  <div class="section-inner">
-    <div class="cont-grid">
-      <div class="cont-info">
-        <div class="section-tag">Contacto</div>
-        <h2 class="section-title" id="cont-title">Hablemos de tu inversión</h2>
-        <p id="cont-sub">Nuestros asesores están listos para guiarte.</p>
-        <div class="cont-detail">
-          <div class="cont-item"><div class="cont-icon">✉️</div><div><div class="cont-item-label">Email</div><div class="cont-item-val" id="cont-email">contacto@rabbittscapital.com</div></div></div>
-          <div class="cont-item"><div class="cont-icon">📞</div><div><div class="cont-item-label">Teléfono</div><div class="cont-item-val" id="cont-phone">+56 9 1234 5678</div></div></div>
-          <div class="cont-item"><div class="cont-icon">📍</div><div><div class="cont-item-label">Dirección</div><div class="cont-item-val" id="cont-addr">Santiago, Chile</div></div></div>
-          <div class="cont-item"><div class="cont-icon">💬</div><div><div class="cont-item-label">WhatsApp</div><div class="cont-item-val" id="cont-wa">+56912345678</div></div></div>
-        </div>
+  <div class="cont-body">
+    <div class="cont-main">
+      <div class="cont-info-card">
+        <h3>Información</h3>
+        <div class="ci-item"><div class="ci-icon">✉️</div><div><div class="ci-lbl">Email</div><div class="ci-val" id="d-email">contacto@rabbittscapital.com</div></div></div>
+        <div class="ci-item"><div class="ci-icon">📞</div><div><div class="ci-lbl">Teléfono</div><div class="ci-val" id="d-phone">+56 9 1234 5678</div></div></div>
+        <div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-lbl">Oficina</div><div class="ci-val" id="d-addr">Santiago, Chile</div></div></div>
+        <div class="ci-item"><div class="ci-icon">💬</div><div><div class="ci-lbl">WhatsApp</div><div class="ci-val" id="d-wa">+56 9 1234 5678</div></div></div>
       </div>
-      <div>
-        <form class="cont-form" onsubmit="sendForm(event)">
-          <input type="text" placeholder="Tu nombre" id="form-nombre" required>
-          <input type="email" placeholder="Tu correo electrónico" id="form-email" required>
-          <input type="tel" placeholder="Tu teléfono" id="form-tel">
-          <select id="form-pais" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:13px 16px;color:var(--cont-text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none">
-            <option value="">¿Qué país te interesa?</option>
-            <option>Chile</option><option>Miami</option><option>México</option><option>Paraguay</option>
-          </select>
-          <textarea placeholder="Cuéntanos sobre tu inversión..." id="form-msg"></textarea>
-          <button type="submit" id="cont-btn">Enviar mensaje →</button>
+      <div class="cont-form-card">
+        <h3>Envíanos un mensaje</h3>
+        <form onsubmit="submitForm(event)">
+          <div class="f-row">
+            <div class="f-field"><label>Nombre</label><input type="text" id="f-nombre" placeholder="Tu nombre completo" required></div>
+            <div class="f-field"><label>Email</label><input type="email" id="f-email" placeholder="tu@email.com" required></div>
+          </div>
+          <div class="f-row">
+            <div class="f-field"><label>Teléfono</label><input type="tel" id="f-tel" placeholder="+56 9 ..."></div>
+            <div class="f-field"><label>País de interés</label><select id="f-pais"><option value="">Seleccionar...</option><option>Chile</option><option>Miami</option><option>México</option><option>Paraguay</option></select></div>
+          </div>
+          <div class="f-field"><label>Mensaje</label><textarea id="f-msg" placeholder="Cuéntanos sobre tu proyecto de inversión..."></textarea></div>
+          <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;margin-top:4px" id="d-cont-btn">Enviar mensaje →</button>
         </form>
       </div>
     </div>
   </div>
-</section>
+</div>
 
 <footer>
-  <div class="footer-inner">
-    <div class="footer-logo" id="footer-logo">RABBITTSCAPITAL</div>
-    <p id="footer-text">© 2025 Rabbittscapital. Todos los derechos reservados.</p>
-    <div class="footer-links">
-      <a href="#" id="footer-ig">Instagram</a>
-      <a href="#" id="footer-wa">WhatsApp</a>
-      <a href="#">Privacidad</a>
+  <div class="ft-inner">
+    <div class="ft-top">
+      <div class="ft-brand"><div class="logo">RABBITTSCAPITAL</div><p id="d-footer-text">Inversiones inmobiliarias premium en Chile, Miami, México y Paraguay.</p></div>
+      <div class="ft-col"><h4>Páginas</h4><button onclick="goPage('inicio')">Inicio</button><button onclick="goPage('propiedades')">Propiedades</button><button onclick="goPage('nosotros')">Nosotros</button><button onclick="goPage('contacto')">Contacto</button></div>
+      <div class="ft-col"><h4>Contacto</h4><button id="d-ft-email">contacto@rabbittscapital.com</button><button id="d-ft-ig">Instagram</button><button id="d-ft-wa">WhatsApp</button></div>
     </div>
+    <div class="ft-bottom"><p id="d-footer-copy">© 2025 Rabbittscapital. Todos los derechos reservados.</p><p style="color:rgba(255,255,255,0.2);font-size:11px">Chile · Miami · México · Paraguay</p></div>
   </div>
 </footer>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-import { getFirestore, doc, onSnapshot, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
-import { addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+import{initializeApp}from"https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
+import{getFirestore,doc,onSnapshot,collection,query,orderBy,addDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyBu2UMpFI-aD5yZIMDtkNrBaej8tUwXML8",authDomain:"rabitocapital.firebaseapp.com",projectId:"rabitocapital",storageBucket:"rabitocapital.firebasestorage.app",messagingSenderId:"240408355009",appId:"1:240408355009:web:8fb2b84f9c7f45e0637440"});
+const db=getFirestore(app);
+let allProps=[];
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBu2UMpFI-aD5yZIMDtkNrBaej8tUwXML8",
-  authDomain: "rabitocapital.firebaseapp.com",
-  projectId: "rabitocapital",
-  storageBucket: "rabitocapital.firebasestorage.app",
-  messagingSenderId: "240408355009",
-  appId: "1:240408355009:web:8fb2b84f9c7f45e0637440",
-  measurementId: "G-8PT183VFV3"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-let allProps = [];
-
-// Escuchar cambios en contenido en tiempo real
-onSnapshot(doc(db, "sitio", "contenido"), (snap) => {
-  if (!snap.exists()) return;
-  const d = snap.data();
-
-  // Aplicar CSS variables de colores
-  if (d.colores) {
-    Object.entries(d.colores).forEach(([k,v]) => {
-      document.documentElement.style.setProperty(k, v);
-    });
+onSnapshot(doc(db,"sitio","contenido"),snap=>{
+  if(!snap.exists())return;
+  const d=snap.data();
+  const s=(id,v)=>{const el=document.getElementById(id);if(el&&v!=null)el.textContent=v;};
+  const sh=(id,v)=>{const el=document.getElementById(id);if(el&&v!=null)el.innerHTML=v;};
+  sh('d-hero-title',d.heroTitle);s('d-hero-sub',d.heroSub);s('d-btn1',d.heroBtn1);s('d-btn2',d.heroBtn2);
+  s('d-info-title',d.infoTitle);s('d-info-desc',d.infoDesc);
+  s('d-nos-title',d.nosTitle);s('d-nos-sub',d.nosSub);s('d-nos-h2',d.nosH2);
+  s('d-nos-p1',d.nosP1);s('d-nos-p2',d.nosP2);s('d-mision',d.nosMision);s('d-vision',d.nosVision);
+  s('d-cont-title',d.contTitle);s('d-cont-sub',d.contSub);
+  s('d-email',d.contEmail);s('d-phone',d.contPhone);s('d-addr',d.contAddr);s('d-wa',d.contWa);
+  s('d-cont-btn',d.contBtn);s('d-footer-text',d.footerText);s('d-footer-copy',d.footerCopy);
+  s('d-ft-email',d.contEmail);s('d-ft-ig',d.footerIg);s('d-ft-wa',d.contWa);
+  if(d.tips){document.getElementById('d-tips').innerHTML=d.tips.map((t,i)=>`<div class="tip-row"><div class="tip-n">${i+1}</div><div class="tip-c"><h4>${t.titulo}</h4><p>${t.desc}</p></div></div>`).join('');}
+  if(d.stats){
+    document.getElementById('d-stats').innerHTML=d.stats.map(s=>`<div class="stat-card"><div class="stat-n">${s.num}</div><div class="stat-l">${s.lbl}</div></div>`).join('');
+    document.getElementById('d-nos-stats').innerHTML=d.stats.slice(0,3).map(s=>`<div><div class="ns-n">${s.num}</div><div class="ns-t">${s.lbl}</div></div>`).join('');
+    if(d.stats[0]){document.getElementById('d-s1n').textContent=d.stats[0].num;document.getElementById('d-s1l').textContent=d.stats[0].lbl;}
+    if(d.stats[1]){document.getElementById('d-s2n').textContent=d.stats[1].num;document.getElementById('d-s2l').textContent=d.stats[1].lbl;}
   }
-
-  // Textos
-  const set = (id, val) => { if (val && document.getElementById(id)) document.getElementById(id).textContent = val; };
-  const setHTML = (id, val) => { if (val && document.getElementById(id)) document.getElementById(id).innerHTML = val; };
-
-  set('nav-logo', d.logo);
-  set('footer-logo', d.logo);
-  set('nav1', d.nav1); set('nav2', d.nav2); set('nav3', d.nav3); set('nav4', d.nav4); set('nav5', d.nav5);
-  setHTML('hero-title', d.heroTitle);
-  set('hero-sub', d.heroSub);
-  set('hero-btn1', d.heroBtn1); set('hero-btn2', d.heroBtn2);
-  set('info-title', d.infoTitle); set('info-desc', d.infoDesc);
-  set('nos-title', d.nosTitle); set('nos-p1', d.nosP1); set('nos-p2', d.nosP2);
-  set('nos-mision', d.nosMision); set('nos-vision', d.nosVision); set('nos-valores', d.nosValores);
-  set('cont-title', d.contTitle); set('cont-sub', d.contSub);
-  set('cont-email', d.contEmail); set('cont-phone', d.contPhone);
-  set('cont-addr', d.contAddr); set('cont-wa', d.contWa);
-  set('cont-btn', d.contBtn);
-  set('footer-text', d.footerText);
-
-  // Tips
-  if (d.tips && d.tips.length) {
-    document.getElementById('tips-grid').innerHTML = d.tips.map(t =>
-      `<div class="tip-item"><div class="tip-title">${t.titulo}</div><div class="tip-desc">${t.desc}</div></div>`
-    ).join('');
-  }
-
-  // Stats info
-  if (d.stats && d.stats.length) {
-    document.getElementById('info-stats').innerHTML = d.stats.map(s =>
-      `<div class="stat-box"><div class="stat-num">${s.num}</div><div class="stat-lbl">${s.lbl}</div></div>`
-    ).join('');
-    document.getElementById('nos-stats').innerHTML = d.stats.slice(0,3).map(s =>
-      `<div class="nos-stat"><div class="nos-stat-n">${s.num}</div><div class="nos-stat-t">${s.lbl}</div></div>`
-    ).join('');
-  }
-
-  document.getElementById('loading').classList.add('hide');
 });
 
-// Cargar propiedades en tiempo real
-const propsRef = collection(db, "propiedades");
-onSnapshot(query(propsRef, orderBy("orden")), (snap) => {
-  allProps = snap.docs.map(d => ({id: d.id, ...d.data()}));
+onSnapshot(query(collection(db,"propiedades"),orderBy("orden")),snap=>{
+  allProps=snap.docs.map(d=>({id:d.id,...d.data()}));
   renderProps('todos');
-  document.getElementById('loading').classList.add('hide');
 });
 
-window.allProps = [];
-window.filterProps = function(pais, btn) {
-  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderProps(pais);
-};
-
-function renderProps(pais) {
-  const filtered = pais === 'todos' ? allProps : allProps.filter(p => p.pais === pais);
-  const grid = document.getElementById('props-grid');
-  if (!filtered.length) {
-    grid.innerHTML = '<p style="color:#999;font-size:14px">No hay propiedades en este destino por ahora.</p>';
-    return;
-  }
-  grid.innerHTML = filtered.map(p => `
-    <div class="prop-card">
-      <div class="prop-img">🏢<span class="prop-badge">${p.badge||'Disponible'}</span></div>
-      <div class="prop-body">
-        <div class="prop-pais">${p.pais} · ${p.tipo}</div>
-        <h3 class="prop-titulo">${p.titulo}</h3>
-        <p class="prop-desc">${p.desc}</p>
-        <div class="prop-footer">
-          <div><div class="prop-precio-lbl">Precio</div><div class="prop-precio-val">${p.precio}</div></div>
-          <div style="text-align:right"><div class="prop-m2-lbl">Superficie</div><div class="prop-m2-val">${p.m2} m²</div></div>
-        </div>
-        <button class="prop-btn" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">Consultar →</button>
+window.filterP=function(pais,btn){document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderProps(pais);};
+function renderProps(pais){
+  const list=pais==='todos'?allProps:allProps.filter(p=>p.pais===pais);
+  const grid=document.getElementById('props-grid');
+  if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:80px;color:var(--muted)">No hay propiedades en este destino aún.</div>';return;}
+  grid.innerHTML=list.map(p=>`
+    <div class="prop-card" onclick="showDet('${p.id}')">
+      <div class="prop-img">
+        ${p.imagenes&&p.imagenes[0]?`<img src="${p.imagenes[0]}" alt="${p.titulo}">`:`<div class="prop-ph">🏢</div>`}
+        <span class="p-badge ${p.badge==='Oportunidad'?'p-badge-gold':'p-badge-navy'}">${p.badge||'Disponible'}</span>
+        <span class="p-country">${p.pais}</span>
       </div>
-    </div>
-  `).join('');
+      <div class="prop-body">
+        <div class="prop-type">${p.tipo||'Propiedad'}</div>
+        <h3 class="prop-titulo">${p.titulo}</h3>
+        <p class="prop-desc-short">${(p.desc||'').substring(0,100)}${(p.desc||'').length>100?'...':''}</p>
+        <div class="prop-footer">
+          <div><div class="prop-precio-lbl">${p.pais==='Chile'?'Precio en UF':'Precio USD'}</div><div class="prop-precio-val">${p.precio||'Consultar'}</div></div>
+          <div style="text-align:right"><div class="prop-m2-lbl">Superficie</div><div class="prop-m2-val">${p.m2||'—'} m²</div></div>
+        </div>
+        <button class="prop-cta-btn">Ver detalles →</button>
+      </div>
+    </div>`).join('');
 }
 
-// Formulario de contacto
-window.sendForm = async function(e) {
-  e.preventDefault();
-  const btn = document.getElementById('cont-btn');
-  btn.textContent = 'Enviando...';
-  btn.disabled = true;
-  try {
-    await addDoc(collection(db, "contactos"), {
-      nombre: document.getElementById('form-nombre').value,
-      email: document.getElementById('form-email').value,
-      tel: document.getElementById('form-tel').value,
-      pais: document.getElementById('form-pais').value,
-      mensaje: document.getElementById('form-msg').value,
-      fecha: serverTimestamp()
-    });
-    btn.textContent = '✓ Mensaje enviado';
-    btn.style.background = '#2d8a4e';
-    e.target.reset();
-  } catch(err) {
-    btn.textContent = 'Error — intenta de nuevo';
-    btn.disabled = false;
-  }
+window.showDet=function(id){
+  const p=allProps.find(x=>x.id===id);if(!p)return;
+  const imgs=p.imagenes&&p.imagenes.length?p.imagenes:[];
+  const moneda=p.pais==='Chile'?'UF':'USD';
+  document.getElementById('det-content').innerHTML=`
+    <div class="det-gallery">
+      ${imgs.length?`<img class="gal-main" id="gal-main-img" src="${imgs[0]}" alt="${p.titulo}">`:`<div class="gal-ph">🏢</div>`}
+      ${imgs.length>1?`<div class="gal-thumbs">${imgs.map((img,i)=>`<img class="gal-thumb${i===0?' active':''}" src="${img}" onclick="setGImg('${img}',this)">`).join('')}</div>`:''}
+    </div>
+    <div class="det-info">
+      <span class="det-badge ${p.badge==='Oportunidad'?'p-badge-gold':'p-badge-navy'}">${p.badge||'Disponible'}</span>
+      <div class="det-type">${p.tipo||'Propiedad'} · ${p.pais}</div>
+      <h1 class="det-titulo">${p.titulo}</h1>
+      <div class="det-loc">📍 ${p.ciudad||p.pais}</div>
+      <div class="det-price-box">
+        <div class="det-price-lbl">Precio</div>
+        <div class="det-price-val">${p.precio||'Consultar'}</div>
+        <div class="det-price-cur">${moneda} · ${p.pais}</div>
+      </div>
+      <div class="det-specs">
+        <div class="spec-box"><div class="spec-lbl">Superficie</div><div class="spec-val">${p.m2||'—'} m²</div></div>
+        <div class="spec-box"><div class="spec-lbl">Dormitorios</div><div class="spec-val">${p.dormitorios||'—'}</div></div>
+        <div class="spec-box"><div class="spec-lbl">Baños</div><div class="spec-val">${p.banos||'—'}</div></div>
+        <div class="spec-box"><div class="spec-lbl">Estacionamientos</div><div class="spec-val">${p.estac||'—'}</div></div>
+      </div>
+      <p class="det-desc">${p.desc||''}</p>
+      ${p.features&&p.features.length?`<div class="det-feats"><h4>Características</h4>${p.features.map(f=>`<span class="feat-tag">${f}</span>`).join('')}</div>`:''}
+      <div class="det-btns">
+        <button class="btn btn-gold" style="justify-content:center;width:100%" onclick="goPage('contacto')">Consultar esta propiedad →</button>
+        <button class="btn btn-outline" style="color:var(--navy);border-color:var(--border);justify-content:center;width:100%" onclick="goPage('propiedades')">Ver más propiedades</button>
+      </div>
+    </div>`;
+  goPage('detalle');
 };
 
-setTimeout(() => document.getElementById('loading').classList.add('hide'), 5000);
+window.setGImg=function(src,th){document.getElementById('gal-main-img').src=src;document.querySelectorAll('.gal-thumb').forEach(t=>t.classList.remove('active'));th.classList.add('active');};
+
+window.submitForm=async function(e){
+  e.preventDefault();
+  const btn=document.getElementById('d-cont-btn');btn.textContent='Enviando...';btn.disabled=true;
+  try{
+    await addDoc(collection(db,"contactos"),{nombre:document.getElementById('f-nombre').value,email:document.getElementById('f-email').value,tel:document.getElementById('f-tel').value,pais:document.getElementById('f-pais').value,mensaje:document.getElementById('f-msg').value,fecha:serverTimestamp()});
+    btn.textContent='✓ Mensaje enviado';btn.style.background='#2d6a4f';e.target.reset();
+  }catch(err){btn.textContent='Error — intenta de nuevo';btn.disabled=false;}
+};
+
+window.goPage=function(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  ['inicio','propiedades','nosotros','contacto'].forEach(n=>{
+    const el=document.getElementById('nb-'+n);
+    if(el)el.classList.toggle('active',n===name||(name==='detalle'&&n==='propiedades'));
+  });
+  window.scrollTo(0,0);
+};
+window.closeMob=function(){document.getElementById('mob-menu').classList.remove('open');};
 </script>
 </body>
 </html>
